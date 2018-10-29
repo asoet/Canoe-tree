@@ -22,36 +22,15 @@ namespace PlantHunter.Mobile.Core.ViewModels
         {
             _navigationService = navigationService;
             _settings = settings;
-
-            ButtonText = Resources.AppResources.MainPageButton;
         }
 
-        public IMvxCommand PressMeCommand =>
-            new MvxCommand(() =>
-            {
-                ButtonText = Resources.AppResources.MainPageButtonPressed;
-            });
-
-        public IMvxAsyncCommand GoToSecondPageCommand =>
+        public IMvxAsyncCommand TakePictureCommand =>
             new MvxAsyncCommand(async () =>
             {
-                var param = new Dictionary<string, string> { { "ButtonText", ButtonText } };
-
-                await _navigationService.Navigate<SecondViewModel, Dictionary<string, string>>(param);
+                var photo = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions() { });
+                var imageSource = ImageSource.FromStream(() => photo.GetStream());
+        
+                await _navigationService.Navigate<PhotoDetailsViewModel, ImageSource>(imageSource);
             });
-
-        public IMvxCommand OpenUrlCommand =>
-            new MvxAsyncCommand<string>(async (url) =>
-            {
-                await Browser.OpenAsync(url, BrowserLaunchType.External);
-            });
-
-        public string ButtonText { get; set; }
-
-        public int SuperNumber
-        {
-            get { return _settings.SuperNumber; }
-            set { _settings.SuperNumber = value; }
-        }
     }
 }

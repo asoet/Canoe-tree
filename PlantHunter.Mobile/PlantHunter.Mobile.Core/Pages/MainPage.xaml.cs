@@ -14,8 +14,8 @@ namespace PlantHunter.Mobile.Core.Pages
         public MainPage()
         {
             InitializeComponent();
-            map.InitialCameraUpdate = CameraUpdateFactory.NewPositionZoom(new Position(20.929120d, -157.582678d), 40d);
+
+            map.InitialCameraUpdate = CameraUpdateFactory.NewPositionZoom(new Position(20.929120d, -157.582678d), 5d);
         }
-      
     }
 }
