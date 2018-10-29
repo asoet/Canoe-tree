@@ -10,6 +10,7 @@ using Android.OS;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Platforms.Android;
+using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps.Android;
 
@@ -47,8 +48,14 @@ namespace PlantHunter.Mobile.Droid
                 BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
             };
             Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
+            CrossCurrentActivity.Current.Init(this, bundle);
 
             base.OnCreate(bundle);
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+        {
+            Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         protected override void RunAppStart(Bundle bundle)

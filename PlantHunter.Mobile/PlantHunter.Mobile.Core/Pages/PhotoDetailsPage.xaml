@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mvx:MvxContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PlantHunter.Mobile.Core.Pages.SecondPage"
+             x:Class="PlantHunter.Mobile.Core.Pages.PhotoDetailsPage"
              xmlns:res="clr-namespace:PlantHunter.Mobile.Core.Resources;assembly=PlantHunter.Mobile.Core"
              xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
-             Title="Second">
+             Title="Details">
   <StackLayout>
-    <Entry Text="{Binding SuperNumber}"/>
-    <Label Text="{Binding MainPageButtonText}"/>
-    <Button Text="Back" Command="{Binding BackCommand}" />
-  </StackLayout>
+        <Image Source="{Binding PictureSource}"/>
+        <Entry Text="{Binding PlantName}"></Entry>
+    </StackLayout>
 </mvx:MvxContentPage>

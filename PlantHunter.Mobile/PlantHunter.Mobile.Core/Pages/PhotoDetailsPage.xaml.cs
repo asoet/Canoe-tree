@@ -7,9 +7,9 @@ using MvvmCross.Forms.Views;
 
 namespace PlantHunter.Mobile.Core.Pages
 {
-    public partial class SecondPage : MvxContentPage
+    public partial class PhotoDetailsPage : MvxContentPage
     {
-        public SecondPage()
+        public PhotoDetailsPage()
         {
             InitializeComponent();
         }
