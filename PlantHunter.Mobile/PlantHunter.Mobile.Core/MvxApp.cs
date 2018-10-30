@@ -9,6 +9,7 @@ using MvvmCross.Base;
 using MvvmCross.IoC;
 using MvvmCross.Plugin.Json;
 using MvvmCross.ViewModels;
+using System.Net.Http;
 
 namespace PlantHunter.Mobile.Core
 {
@@ -29,6 +30,7 @@ namespace PlantHunter.Mobile.Core
             Mvx.RegisterType<Services.IAppSettings, Services.AppSettings>();
             Mvx.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
             Mvx.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
+            Mvx.RegisterSingleton<HttpClient>(() => new HttpClient() );
 
             Resources.AppResources.Culture = Mvx.Resolve<Services.ILocalizeService>().GetCurrentCultureInfo();
 
