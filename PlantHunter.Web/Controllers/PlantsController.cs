@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,13 @@ namespace PlantHunter.Mobile.Web.Controllers
     public class PlantsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PlantsController(ApplicationDbContext context)
+        public PlantsController(ApplicationDbContext context,
+            IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Plants
@@ -57,7 +62,14 @@ namespace PlantHunter.Mobile.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var plant = new Plant();
+                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude);
+
+                //Save image to folder
+                //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.
+                //TODO: use more secure place to store. For HACC its okay
+                string filePath = $"plants/{plant.Id}.{plantViewModel.ContentType}";
+                System.IO.File.WriteAllBytes(Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", filePath), Convert.FromBase64String(plantViewModel.ImageBase64));
+
                 _context.Add(plant);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -99,7 +111,8 @@ namespace PlantHunter.Mobile.Web.Controllers
                 {
                     return NotFound();
                 }
-                //Update properties here... For now no properties to update
+                plant.Longitude = plantViewModel.Longitude;
+                plant.Latitude = plantViewModel.Latitude;
                 try
                 {
                     

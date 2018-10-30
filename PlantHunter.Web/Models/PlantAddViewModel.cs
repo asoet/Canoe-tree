@@ -9,5 +9,7 @@ namespace PlantHunter.Mobile.Web.Models
     {
         public string ImageBase64 { get; set; }
         public string ContentType { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }
