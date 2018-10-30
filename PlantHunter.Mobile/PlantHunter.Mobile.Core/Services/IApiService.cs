@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using PlantHunter.Mobile.Core.Models;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PlantHunter.Mobile.Core.Services
 {
     public interface IApiService
     {
-        Task<bool> UploadPictureAsync(Stream pictureStream, string contentType);
+        Task<bool> UploadPictureAsync(Stream pictureStream, string contentType, AddPictureModel additionalInfo);
     }
 }

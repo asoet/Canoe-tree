@@ -61,8 +61,10 @@ namespace PlantHunter.Mobile.Web.Controllers
                 return BadRequest(ModelState);
             }
             var plant = _context.Plants.Find(id);
+            //Update Properties
+            plant.Longitude = plantViewModel.Longitude;
+            plant.Latitude = plantViewModel.Latitude;
 
-            //TODO: update properties
 
             _context.Entry(plant).State = EntityState.Modified;
 
@@ -93,8 +95,7 @@ namespace PlantHunter.Mobile.Web.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var plant = new Plant();
-            //TODO: Add additional properties
+            var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude);
         
             //Save image to folder
             //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.
