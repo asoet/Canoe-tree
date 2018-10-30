@@ -7,6 +7,6 @@
              Title="Details">
   <StackLayout>
         <Image Source="{Binding PictureSource}"/>
-        <Entry Text="{Binding PlantName}"></Entry>
+        <Button Command="{Binding UploadPictureCommand}" Text="Upload"></Button>
     </StackLayout>
 </mvx:MvxContentPage>

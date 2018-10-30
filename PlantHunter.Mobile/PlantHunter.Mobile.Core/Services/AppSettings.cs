@@ -9,13 +9,13 @@ namespace PlantHunter.Mobile.Core.Services
 {
     public class AppSettings : IAppSettings
     {
-        public const string SuperNumberKey = "SuperNumberKey";
-        public const int SuperNumberDefaultValue = 1;
+        public const string ApiUrlKey = "ApiUrlKey";
+        public const string ApiUrlDefaultValue = "https://planthunter-2-dev-as.azurewebsites.net/";
 
-        public int SuperNumber
+        public string ApiUrl
         {
-            get { return Preferences.Get(SuperNumberKey, SuperNumberDefaultValue); }
-            set { Preferences.Set(SuperNumberKey, value); }
+            get { return Preferences.Get(ApiUrlKey, ApiUrlDefaultValue); }
+            set { Preferences.Set(ApiUrlKey, value); }
         }
     }
 }
