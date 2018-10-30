@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantHunter.Mobile.UITests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlantHunter.Mobile.UnitTests", "PlantHunter.Mobile\PlantHunter.Mobile.UnitTests\PlantHunter.Mobile.UnitTests.csproj", "{89CE4C1A-67A1-447F-9814-F653B82EBD1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantHunter.Mobile.Web", "PlantHunter.Web\PlantHunter.Mobile.Web.csproj", "{1ED3C37C-455C-4FFF-BCC7-336DE6046556}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantHunter.Web", "PlantHunter.Web\PlantHunter.Web.csproj", "{1ED3C37C-455C-4FFF-BCC7-336DE6046556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
