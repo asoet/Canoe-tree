@@ -7,9 +7,10 @@
              Title="Map">
     <ContentPage.Content>
         <Grid>
-            <maps:Map x:Name="map"/>
+            <maps:Map x:Name="map" BindingContext="{Binding Map}"/>
             <Button x:Name="TakePictureBtn"
                     Command="{Binding TakePictureCommand}"
+                    IsEnabled="{Binding TakePictureButtonEnabled}"
                     Text="Take picture"
                     HorizontalOptions="Center" 
                     VerticalOptions="End" 

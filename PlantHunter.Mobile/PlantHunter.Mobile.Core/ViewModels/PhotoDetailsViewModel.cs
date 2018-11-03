@@ -71,7 +71,8 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 var additionalInfo = new AddPictureModel()
                 {
                     Longitude = longitude,
-                    Latitude = lattitude
+                    Latitude = lattitude,
+                    Name = PlantName
                 };
                 if(await _apiService.UploadPictureAsync(Photo.GetStream(), Path.GetExtension(Photo.Path), additionalInfo))
                 {

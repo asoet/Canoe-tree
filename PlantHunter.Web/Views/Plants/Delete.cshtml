@@ -12,12 +12,30 @@
     <h4>Plant</h4>
     <hr />
     <dl class="dl-horizontal">
-        @*<dt>
-            @Html.DisplayNameFor(model => model.PlantFilePath)
+        <dt>
+            @Html.DisplayNameFor(model => model.Longitude)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PlantFilePath)
-        </dd>*@
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PlantFileUrl)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlantFileUrl)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
     </dl>
     
     <form asp-action="Delete">
