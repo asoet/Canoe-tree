@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PlantHunter.Mobile.Core.Services
@@ -21,6 +22,15 @@ namespace PlantHunter.Mobile.Core.Services
             _httpClient = httpClient;
         }
 
+        public async Task<IEnumerable<Plant>> GetAllPlantsAsync()
+        {
+            _httpClient.BaseAddress = new Uri(_appSettings.ApiUrl);
+            var response = await _httpClient.GetAsync($"api/plants");
+            if (!response.IsSuccessStatusCode)
+                return new List<Plant>();
+            return JsonConvert.DeserializeObject<IEnumerable<Plant>>(await response.Content.ReadAsStringAsync());
+        }
+
         public async System.Threading.Tasks.Task<bool> UploadPictureAsync(Stream pictureStream, string contentType, AddPictureModel additionalInfo)
         {
             _httpClient.BaseAddress = new Uri(_appSettings.ApiUrl);
@@ -29,7 +39,8 @@ namespace PlantHunter.Mobile.Core.Services
                 ImageBase64 = pictureStream.ConvertToBase64(),
                 ContentType = contentType,
                 additionalInfo.Latitude,
-                additionalInfo.Longitude
+                additionalInfo.Longitude,
+                additionalInfo.Name
             }),Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {

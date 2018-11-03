@@ -11,19 +11,20 @@ using PlantHunter.Mobile.Web.Data.Models;
 using PlantHunter.Mobile.Web.Models;
 using web.Data;
 
-namespace PlantHunter.Mobile.Web.Controllers
+namespace PlantHunter.Web.Controllers
 {
     public class PlantsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PlantsController(ApplicationDbContext context,
-            IHostingEnvironment hostingEnvironment)
+        public PlantsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
+
+
 
         // GET: Plants
         public async Task<IActionResult> Index()
@@ -56,13 +57,15 @@ namespace PlantHunter.Mobile.Web.Controllers
         }
 
         // POST: Plants/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PlantAddViewModel plantViewModel)
+        public async Task<IActionResult> Create([FromBody]PlantAddViewModel plantViewModel)
         {
             if (ModelState.IsValid)
             {
-                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude);
+                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name);
 
                 //Save image to folder
                 //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.
@@ -94,28 +97,21 @@ namespace PlantHunter.Mobile.Web.Controllers
         }
 
         // POST: Plants/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, PlantAddViewModel plantViewModel)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Longitude,Latitude,Id,PlantFileUrl,Name")] Plant plant)
         {
+            if (id != plant.Id)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var plant = await _context.Plants
-                    .FirstOrDefaultAsync(m => m.Id == id);
-                if (plant == null)
-                {
-                    return NotFound();
-                }
-                plant.Longitude = plantViewModel.Longitude;
-                plant.Latitude = plantViewModel.Latitude;
                 try
                 {
-                    
                     _context.Update(plant);
                     await _context.SaveChangesAsync();
                 }
@@ -132,7 +128,7 @@ namespace PlantHunter.Mobile.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(plantViewModel);
+            return View(plant);
         }
 
         // GET: Plants/Delete/5

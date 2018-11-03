@@ -13,12 +13,27 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
             <input type="hidden" asp-for="Id" />
-            @*<div class="form-group">
-                <label asp-for="PlantFilePath" class="control-label"></label>
-                <input asp-for="PlantFilePath" class="form-control" />
-                <span asp-validation-for="PlantFilePath" class="text-danger"></span>
-            </div>*@
+            <div class="form-group">
+                <label asp-for="PlantFileUrl" class="control-label"></label>
+                <input asp-for="PlantFileUrl" class="form-control" />
+                <span asp-validation-for="PlantFileUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
