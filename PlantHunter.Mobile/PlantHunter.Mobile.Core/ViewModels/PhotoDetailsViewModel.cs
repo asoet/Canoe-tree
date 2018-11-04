@@ -77,10 +77,11 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 if(await _apiService.UploadPictureAsync(Photo.GetStream(), Path.GetExtension(Photo.Path), additionalInfo))
                 {
                     _userDialogs.Alert("Uploaded successfully");
+                    await _navigationService.Navigate<MainViewModel>();
                 }
                 else
                 {
-                    _userDialogs.Alert("Upload failed");
+                    _userDialogs.Alert("Upload failed. Try again, prob not going to work");
                 }
             });
 
@@ -146,7 +147,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
                     GpsLatDouble = GpsLatArray[0] + GpsLatArray[1] / 60 + GpsLatArray[2] / 3600;
 
                     Console.WriteLine("The picture was taken at {0},{1}", GpsLongDouble, GpsLatDouble);
-                    return (GpsLongDouble, GpsLatDouble);
+                    return (-GpsLongDouble, GpsLatDouble);
                 }
                 return (0, 0);
             }
