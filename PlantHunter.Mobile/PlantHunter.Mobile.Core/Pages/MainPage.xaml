@@ -15,7 +15,8 @@
                     HorizontalOptions="Center" 
                     VerticalOptions="End" 
                     BorderRadius = "5"
-                    BorderWidth = "2" />
+                    BorderWidth = "2" 
+                    />
         </Grid>
     </ContentPage.Content>
 </mvx:MvxContentPage>

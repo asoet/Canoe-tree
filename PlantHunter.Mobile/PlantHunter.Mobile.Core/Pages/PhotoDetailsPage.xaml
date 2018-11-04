@@ -6,9 +6,9 @@
              xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
              Title="Details">
   <StackLayout>
-        <Image WidthRequest="20" HeightRequest="20" Source="{Binding PictureSource}"/>
+        <Image WidthRequest="120" HeightRequest="120" HorizontalOptions="Start" Source="{Binding PictureSource}"/>
         <Label Text="Name:"></Label>
         <Entry Text="{Binding PlantName}"></Entry>
-        <Button Command="{Binding UploadPictureCommand}" Text="Upload"></Button>
+        <Button Command="{Binding UploadPictureCommand}" IsVisible="{Binding UploadButtonVisible}" Text="Upload"></Button>
     </StackLayout>
 </mvx:MvxContentPage>

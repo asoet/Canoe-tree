@@ -5,8 +5,11 @@
 
 using MvvmCross;
 using MvvmCross.Forms.Views;
+using MvvmCross.Navigation;
+using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
 using PlantHunter.Mobile.Core.ViewModels;
+using Plugin.Media.Abstractions;
 using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
@@ -38,11 +41,18 @@ namespace PlantHunter.Mobile.Core.Pages
                         Position = new Position(item.Latitude, item.Longitude),
                         Tag = item
                     };
-                    pin.c
                     map.Pins.Add(pin);
                 }
             });
-           
+            map.InfoWindowClicked += InfoWindowClicked;
+        }
+
+        private void InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Mvx.Resolve<IMvxNavigationService>().Navigate<PhotoDetailsViewModel, (ImageSource source, MediaFile photo, Plant plant)>((default, default, e.Pin.Tag as Plant));
+            });
         }
     }
 }
