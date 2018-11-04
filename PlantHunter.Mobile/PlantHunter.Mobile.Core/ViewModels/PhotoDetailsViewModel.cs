@@ -24,7 +24,7 @@ using Xamarin.Forms;
 
 namespace PlantHunter.Mobile.Core.ViewModels
 {
-    public class PhotoDetailsViewModel : MvxViewModel<(ImageSource source, MediaFile photo)>
+    public class PhotoDetailsViewModel : MvxViewModel<(ImageSource source, MediaFile photo, Plant plant)>
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly Services.IAppSettings _settings;
@@ -35,6 +35,8 @@ namespace PlantHunter.Mobile.Core.ViewModels
         public ImageSource PictureSource { get; set; }
         public MediaFile Photo { get; set; }
         public string PlantName { get; set; }
+        public Plant Plant { get; set; }
+        public bool UploadButtonVisible { get; set; }
 
         public PhotoDetailsViewModel(IMvxNavigationService navigationService, IAppSettings settings, IUserDialogs userDialogs, ILocalizeService localizeService, IApiService apiService)
         {
@@ -46,10 +48,26 @@ namespace PlantHunter.Mobile.Core.ViewModels
         }
 
 
-        public override void Prepare((ImageSource source, MediaFile photo) parameter)
+        public override void Prepare((ImageSource source, MediaFile photo, Plant plant) parameter)
         {
-            PictureSource = parameter.source;
-            Photo = parameter.photo;
+            if(parameter.source != default && parameter.photo != default)
+            {
+                PictureSource = parameter.source;
+                Photo = parameter.photo;
+            }
+            Plant = parameter.plant;
+        }
+
+        public override void ViewAppearing()
+        {
+            base.ViewAppearing();
+            if (Plant != null)
+            {
+                PictureSource = ImageSource.FromUri(new Uri("https://planthunter-2-dev-as.azurewebsites.net/" + Plant.PlantFileUrl));
+                PlantName = Plant.Name;
+                UploadButtonVisible = false;
+            }
+            UploadButtonVisible = true;
         }
 
 
@@ -147,7 +165,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
                     GpsLatDouble = GpsLatArray[0] + GpsLatArray[1] / 60 + GpsLatArray[2] / 3600;
 
                     Console.WriteLine("The picture was taken at {0},{1}", GpsLongDouble, GpsLatDouble);
-                    return (-GpsLongDouble, GpsLatDouble);
+                    return (-GpsLongDouble, GpsLatDouble); //TODO: fix - on longitude
                 }
                 return (0, 0);
             }

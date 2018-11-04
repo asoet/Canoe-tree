@@ -7,6 +7,7 @@ using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
 using Plugin.Media.Abstractions;
 using System;
@@ -38,10 +39,8 @@ namespace PlantHunter.Mobile.Core.ViewModels
             _userDialogs = userDialogs;
             _apiService = apiService;
 
-            
-           
-        }
 
+        }
 
         public IMvxAsyncCommand TakePictureCommand =>
             new MvxAsyncCommand(async () =>
@@ -52,7 +51,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 else
                 {
                     var imageSource = ImageSource.FromStream(() => photo.GetStream());
-                    await _navigationService.Navigate<PhotoDetailsViewModel, (ImageSource source, MediaFile photo)>((imageSource, photo));
+                    await _navigationService.Navigate<PhotoDetailsViewModel, (ImageSource source, MediaFile photo, Plant plant)>((imageSource, photo, null));
                 }
                 TakePictureButtonEnabled = true;
             });
