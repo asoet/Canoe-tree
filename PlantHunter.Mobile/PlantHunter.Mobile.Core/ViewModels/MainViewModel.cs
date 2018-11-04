@@ -42,22 +42,6 @@ namespace PlantHunter.Mobile.Core.ViewModels
            
         }
 
-        public override async void ViewAppearing()
-        {
-            var allPlants = (await _apiService.GetAllPlantsAsync());
-            var plantsSubSet = allPlants.Where(f => f.Longitude != default && f.Latitude != default && f.Name != default);
-            foreach (var item in plantsSubSet)
-            {
-                var pin = new Pin()
-                {
-                    Type = PinType.SavedPin,
-                    Label = item.Name,
-                    Position = new Position(item.Latitude, item.Longitude),
-                    Tag = item
-                };
-                Map.Pins.Add(pin);
-            }
-        }
 
         public IMvxAsyncCommand TakePictureCommand =>
             new MvxAsyncCommand(async () =>
