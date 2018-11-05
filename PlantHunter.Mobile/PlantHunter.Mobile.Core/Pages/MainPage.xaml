@@ -8,6 +8,21 @@
     <ContentPage.Content>
         <Grid>
             <maps:Map x:Name="map" BindingContext="{Binding Map}"/>
+            <Grid VerticalOptions="Start"
+                    HorizontalOptions="End"
+                    Margin="10"
+                    BackgroundColor="{DynamicResource Primary}"
+                  Padding="0,10,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0" Grid.Column="0" HeightRequest="10" WidthRequest="10" Source="coins.png"></Image>
+                <Label Grid.Row="0" Grid.Column="1" x:Name="totalPoints"></Label>
+            </Grid>
             <Button x:Name="TakePictureBtn"
                     Command="{Binding TakePictureCommand}"
                     IsEnabled="{Binding TakePictureButtonEnabled}"
@@ -16,6 +31,7 @@
                     VerticalOptions="End" 
                     BorderRadius = "5"
                     BorderWidth = "2" 
+                    Margin="10"
                     />
         </Grid>
     </ContentPage.Content>

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
-using PlantHunter.Mobile.Web.Models;
 using web.Data;
 
 namespace PlantHunter.Web.Controllers
@@ -16,15 +13,11 @@ namespace PlantHunter.Web.Controllers
     public class PlantsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public PlantsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+        public PlantsController(ApplicationDbContext context)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
         }
-
-
 
         // GET: Plants
         public async Task<IActionResult> Index()
@@ -50,35 +43,28 @@ namespace PlantHunter.Web.Controllers
             return View(plant);
         }
 
-        // GET: Plants/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //// GET: Plants/Create
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: Plants/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody]PlantAddViewModel plantViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name, plantViewModel.DeviceId);
-
-                //Save image to folder
-                //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.
-                //TODO: use more secure place to store. For HACC its okay
-                string filePath = $"plants/{plant.Id}.{plantViewModel.ContentType}";
-                System.IO.File.WriteAllBytes(Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", filePath), Convert.FromBase64String(plantViewModel.ImageBase64));
-
-                _context.Add(plant);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(plantViewModel);
-        }
+        //// POST: Plants/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Longitude,Latitude,Id,PlantFileUrl,Name,DeviceId,Points")] Plant plant)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        plant.Id = Guid.NewGuid();
+        //        _context.Add(plant);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(plant);
+        //}
 
         // GET: Plants/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
@@ -101,7 +87,7 @@ namespace PlantHunter.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Longitude,Latitude,Id,PlantFileUrl,Name")] Plant plant)
+        public async Task<IActionResult> Edit(Guid id, [FromForm]Plant plant)
         {
             if (id != plant.Id)
             {
@@ -112,7 +98,14 @@ namespace PlantHunter.Web.Controllers
             {
                 try
                 {
-                    _context.Update(plant);
+                    var plantDb = await _context.Plants
+                        .FirstOrDefaultAsync(m => m.Id == id);
+                    plantDb.Name = plant.Name;
+                    plantDb.PlantFileUrl = plant.PlantFileUrl;
+                    plantDb.Points = plant.Points;
+                    plantDb.DeviceId = plant.DeviceId;
+
+                    _context.Update(plantDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

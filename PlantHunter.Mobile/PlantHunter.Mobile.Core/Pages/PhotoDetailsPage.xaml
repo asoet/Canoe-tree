@@ -8,7 +8,10 @@
   <StackLayout>
         <Image WidthRequest="120" HeightRequest="120" HorizontalOptions="Start" Source="{Binding PictureSource}"/>
         <Label Text="Name:"></Label>
-        <Entry Text="{Binding PlantName}"></Entry>
-        <Button Command="{Binding UploadPictureCommand}" IsVisible="{Binding UploadButtonVisible}" Text="Upload"></Button>
+        <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantName}"></Entry>
+        <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantName}"></Label>
+        <Label IsVisible="{Binding IsExisiting}" Text="Points:"></Label>
+        <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantPoints}"></Label>
+        <Button Command="{Binding UploadPictureCommand}" IsVisible="{Binding IsNotExisiting}" Text="Upload"></Button>
     </StackLayout>
 </mvx:MvxContentPage>

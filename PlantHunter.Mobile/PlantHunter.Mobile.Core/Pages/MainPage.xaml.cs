@@ -24,6 +24,7 @@ namespace PlantHunter.Mobile.Core.Pages
             InitializeComponent();
 
             map.InitialCameraUpdate = CameraUpdateFactory.NewPositionZoom(new Position(20.929120d, -157.582678d), 5d);
+            totalPoints.Text = "- points";
         }
 
         protected override void OnAppearing()
@@ -33,6 +34,7 @@ namespace PlantHunter.Mobile.Core.Pages
             {
                 var allPlants = await Mvx.Resolve<IApiService>().GetAllPlantsAsync();
                 var plantsSubSet = allPlants.Where(f => f.Longitude != default && f.Latitude != default && f.Name != default);
+                totalPoints.Text = plantsSubSet.Where(f=>f.DeviceId == CrossDeviceInfo.Current.Id).Sum(f => f.Points) + " points";
                 foreach (var item in plantsSubSet)
                 {
                     Color color = item.DeviceId == CrossDeviceInfo.Current.Id ? Color.Red : Color.Blue;
@@ -46,6 +48,7 @@ namespace PlantHunter.Mobile.Core.Pages
                 };
                     map.Pins.Add(pin);
                 }
+
             });
             map.InfoWindowClicked += InfoWindowClicked;
         }
