@@ -12,5 +12,6 @@ namespace PlantHunter.Mobile.Core.Models
         public string PlantFileUrl { get; set; }
         public string Name { get; set; }
         public string DeviceId { get; set; }
+        public long Points { get; set; }
     }
 }
