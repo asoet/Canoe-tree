@@ -11,12 +11,13 @@ namespace PlantHunter.Mobile.Web.Data.Models
         {
 
         }
-        public Plant(double longitude, double latitude, string name)
+        public Plant(double longitude, double latitude, string name, string deviceId)
         {
             Id = Guid.NewGuid();
-            this.Longitude = longitude;
-            this.Latitude = latitude;
+            Longitude = longitude;
+            Latitude = latitude;
             Name = name;
+            DeviceId = deviceId;
         }
 
         public double Longitude { get; set; }
@@ -24,5 +25,6 @@ namespace PlantHunter.Mobile.Web.Data.Models
         public Guid Id { get; set; }
         public string PlantFileUrl { get; set; }
         public string Name { get; set; }
+        public string DeviceId { get; set; }
     }
 }
