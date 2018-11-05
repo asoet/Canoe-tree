@@ -41,7 +41,12 @@ namespace PlantHunter.Mobile.Core.Services
                 additionalInfo.Latitude,
                 additionalInfo.Longitude,
                 additionalInfo.Name,
-                additionalInfo.DeviceId
+                additionalInfo.DeviceId,
+                additionalInfo.EndangeredLevel,
+                additionalInfo.Family,
+                additionalInfo.ScientificName,
+                additionalInfo.Surrounding,
+                additionalInfo.Description
             }),Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {

@@ -15,6 +15,7 @@ using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Plugin.Media.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace PlantHunter.Mobile.Core.ViewModels
 {
     public class PhotoDetailsViewModel : MvxViewModel<(ImageSource source, MediaFile photo, Plant plant)>
     {
+        private const string Hiker = "Hiker";
+        private const string Botnist = "Botnist";
+        private const string CitizenScientist = "Citizen Scientist";
+
         private readonly IMvxNavigationService _navigationService;
         private readonly Services.IAppSettings _settings;
         private readonly IUserDialogs _userDialogs;
@@ -33,11 +38,26 @@ namespace PlantHunter.Mobile.Core.ViewModels
 
         public ImageSource PictureSource { get; set; }
         public MediaFile Photo { get; set; }
-        public string PlantName { get; set; }
         public Plant Plant { get; set; }
         public bool IsNotExisiting { get; set; }
         public string PlantPoints { get; set; }
         public bool IsExisiting { get; set; }
+        public string SelectedSortUser { get; set; }
+        public List<string> AllSortUsers { get; set; } = new List<string>
+        {
+            Hiker,
+            CitizenScientist,
+            Botnist
+        };
+
+        //Fields
+        public string PlantName { get; set; }
+        public string PlantScientificName { get; set; }
+        public string PlantFamily { get; set; }
+        public string PlantDescription { get; set; }
+        public string PlantEndangeredLevel { get; set; }
+        public string PlantSurrounding { get; set; }
+
 
         public PhotoDetailsViewModel(IMvxNavigationService navigationService, IAppSettings settings, IUserDialogs userDialogs, ILocalizeService localizeService, IApiService apiService,
             IAppSettings appSettings)
@@ -77,8 +97,8 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 IsNotExisiting = true;
                 IsExisiting = false;
             }
+            SelectedSortUser = _appSettings.Role;
         }
-
 
         public IMvxAsyncCommand UploadPictureCommand =>
             new MvxAsyncCommand(async () =>
@@ -100,8 +120,13 @@ namespace PlantHunter.Mobile.Core.ViewModels
                     Longitude = longitude,
                     Latitude = lattitude,
                     Name = PlantName,
-                    DeviceId = CrossDeviceInfo.Current.Id
-                };
+                    DeviceId = CrossDeviceInfo.Current.Id,
+                    ScientificName = PlantScientificName,
+                    Family = PlantFamily,
+                    Description = PlantDescription,
+                    EndangeredLevel = PlantEndangeredLevel,
+                    Surrounding = PlantSurrounding
+    };
                 if(await _apiService.UploadPictureAsync(Photo.GetStream(), Path.GetExtension(Photo.Path), additionalInfo))
                 {
                     _userDialogs.Alert("Uploaded successfully");

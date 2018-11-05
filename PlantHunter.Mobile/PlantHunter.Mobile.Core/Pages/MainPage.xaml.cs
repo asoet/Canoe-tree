@@ -19,6 +19,7 @@ namespace PlantHunter.Mobile.Core.Pages
 {
     public partial class MainPage : MvxContentPage
     {
+
         public MainPage()
         {
             InitializeComponent();
