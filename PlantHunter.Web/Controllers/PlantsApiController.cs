@@ -52,40 +52,40 @@ namespace PlantHunter.Mobile.Web.Controllers
             return Ok(plant);
         }
 
-        // PUT: api/PlantsApi/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlant([FromRoute] Guid id, [FromBody] PlantAddViewModel plantViewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var plant = _context.Plants.Find(id);
-            //Update Properties
-            plant.Longitude = plantViewModel.Longitude;
-            plant.Latitude = plantViewModel.Latitude;
+        //// PUT: api/PlantsApi/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutPlant([FromRoute] Guid id, [FromBody] PlantAddViewModel plantViewModel)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var plant = _context.Plants.Find(id);
+        //    //Update Properties
+        //    plant.Longitude = plantViewModel.Longitude;
+        //    plant.Latitude = plantViewModel.Latitude;
 
 
-            _context.Entry(plant).State = EntityState.Modified;
+        //    _context.Entry(plant).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlantExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!PlantExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/PlantsApi
         [HttpPost]
@@ -95,7 +95,7 @@ namespace PlantHunter.Mobile.Web.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name, plantViewModel.DeviceId);
+            var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name, plantViewModel.DeviceId, plantViewModel.ScientificName, plantViewModel.Family, plantViewModel.EndangeredLevel, plantViewModel.Surrounding, plantViewModel.Description);
         
             //Save image to folder
             //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.

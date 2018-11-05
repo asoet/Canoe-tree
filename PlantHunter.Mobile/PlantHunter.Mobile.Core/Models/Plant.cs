@@ -13,5 +13,10 @@ namespace PlantHunter.Mobile.Core.Models
         public string Name { get; set; }
         public string DeviceId { get; set; }
         public long Points { get; set; }
+        public string ScientificName { get; set; }
+        public string Family { get; set; }
+        public string EndangeredLevel { get; set; }
+        public string Surrounding { get; set; }
+        public string Description { get; set; }
     }
 }

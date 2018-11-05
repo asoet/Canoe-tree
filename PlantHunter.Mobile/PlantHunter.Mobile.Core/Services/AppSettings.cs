@@ -17,5 +17,14 @@ namespace PlantHunter.Mobile.Core.Services
             get { return Preferences.Get(ApiUrlKey, ApiUrlDefaultValue); }
             set { Preferences.Set(ApiUrlKey, value); }
         }
+
+        public const string RoleKey = "RoleKey";
+        public const string RoleDefaultValue = "Hiker";
+
+        public string Role
+        {
+            get { return Preferences.Get(RoleKey, RoleDefaultValue); }
+            set { Preferences.Set(RoleKey, value); }
+        }
     }
 }

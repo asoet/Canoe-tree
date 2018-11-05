@@ -8,5 +8,6 @@ namespace PlantHunter.Mobile.Core.Services
     public interface IAppSettings
     {
         string ApiUrl { get; set; }
+        string Role { get; set; }
     }
 }

@@ -104,6 +104,11 @@ namespace PlantHunter.Web.Controllers
                     plantDb.PlantFileUrl = plant.PlantFileUrl;
                     plantDb.Points = plant.Points;
                     plantDb.DeviceId = plant.DeviceId;
+                    plantDb.ScientificName = plant.ScientificName;
+                    plantDb.Family = plant.Family;
+                    plantDb.Description = plant.Description;
+                    plantDb.Surrounding = plant.Surrounding;
+                    plantDb.EndangeredLevel = plant.EndangeredLevel;
 
                     _context.Update(plantDb);
                     await _context.SaveChangesAsync();
