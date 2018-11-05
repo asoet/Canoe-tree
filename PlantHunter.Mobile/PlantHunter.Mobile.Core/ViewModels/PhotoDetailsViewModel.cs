@@ -8,7 +8,6 @@ using ExifLib;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using PlantHunter.Mobile.Core.Helpers;
 using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
 using Plugin.DeviceInfo;
@@ -16,10 +15,8 @@ using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Plugin.Media.Abstractions;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -38,7 +35,9 @@ namespace PlantHunter.Mobile.Core.ViewModels
         public MediaFile Photo { get; set; }
         public string PlantName { get; set; }
         public Plant Plant { get; set; }
-        public bool UploadButtonVisible { get; set; }
+        public bool IsNotExisiting { get; set; }
+        public string PlantPoints { get; set; }
+        public bool IsExisiting { get; set; }
 
         public PhotoDetailsViewModel(IMvxNavigationService navigationService, IAppSettings settings, IUserDialogs userDialogs, ILocalizeService localizeService, IApiService apiService,
             IAppSettings appSettings)
@@ -69,9 +68,15 @@ namespace PlantHunter.Mobile.Core.ViewModels
             {
                 PictureSource = ImageSource.FromUri(new Uri(_appSettings.ApiUrl + Plant.PlantFileUrl));
                 PlantName = Plant.Name;
-                UploadButtonVisible = false;
+                PlantPoints = Plant.Points.ToString();
+                IsNotExisiting = false;
+                IsExisiting = true;
             }
-            UploadButtonVisible = true;
+            else
+            {
+                IsNotExisiting = true;
+                IsExisiting = false;
+            }
         }
 
 
