@@ -31,6 +31,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly ILocalizeService _localizeService;
         private readonly IApiService _apiService;
+        private readonly IAppSettings _appSettings;
 
         public ImageSource PictureSource { get; set; }
         public MediaFile Photo { get; set; }
@@ -38,13 +39,15 @@ namespace PlantHunter.Mobile.Core.ViewModels
         public Plant Plant { get; set; }
         public bool UploadButtonVisible { get; set; }
 
-        public PhotoDetailsViewModel(IMvxNavigationService navigationService, IAppSettings settings, IUserDialogs userDialogs, ILocalizeService localizeService, IApiService apiService)
+        public PhotoDetailsViewModel(IMvxNavigationService navigationService, IAppSettings settings, IUserDialogs userDialogs, ILocalizeService localizeService, IApiService apiService,
+            IAppSettings appSettings)
         {
             _navigationService = navigationService;
             _settings = settings;
             _userDialogs = userDialogs;
             _localizeService = localizeService;
             _apiService = apiService;
+            _appSettings = appSettings;
         }
 
 
@@ -63,7 +66,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
             base.ViewAppearing();
             if (Plant != null)
             {
-                PictureSource = ImageSource.FromUri(new Uri("https://planthunter-2-dev-as.azurewebsites.net/" + Plant.PlantFileUrl));
+                PictureSource = ImageSource.FromUri(new Uri(_appSettings.ApiUrl + Plant.PlantFileUrl));
                 PlantName = Plant.Name;
                 UploadButtonVisible = false;
             }
