@@ -12,13 +12,18 @@ namespace PlantHunter.Mobile.Web.Data.Models
         {
 
         }
-        public Plant(double longitude, double latitude, string name, string deviceId)
+
+        public Plant(double longitude, double latitude, string name, string deviceId, string scientificName, string family, string endangeredLevel, string surrounding, string description)
         {
-            Id = Guid.NewGuid();
             Longitude = longitude;
             Latitude = latitude;
             Name = name;
             DeviceId = deviceId;
+            ScientificName = scientificName;
+            Family = family;
+            EndangeredLevel = endangeredLevel;
+            Surrounding = surrounding;
+            Description = description;
         }
 
         public void EditPoints(long points)
@@ -37,5 +42,12 @@ namespace PlantHunter.Mobile.Web.Data.Models
         [DisplayName("User")]
         public string DeviceId { get; set; }
         public long Points { get; set; }
+        [DisplayName("Scientific name")]
+        public string ScientificName { get; set; }
+        public string Family { get; set; }
+        [DisplayName("Endangered level")]
+        public string EndangeredLevel { get; set; }
+        public string Surrounding { get; set; }
+        public string Description { get; set; }
     }
 }
