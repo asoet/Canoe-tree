@@ -40,7 +40,8 @@ namespace PlantHunter.Mobile.Core.Services
                 ContentType = contentType,
                 additionalInfo.Latitude,
                 additionalInfo.Longitude,
-                additionalInfo.Name
+                additionalInfo.Name,
+                additionalInfo.DeviceId
             }),Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)
             {

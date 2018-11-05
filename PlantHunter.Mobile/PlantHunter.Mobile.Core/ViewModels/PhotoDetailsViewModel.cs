@@ -11,6 +11,7 @@ using MvvmCross.ViewModels;
 using PlantHunter.Mobile.Core.Helpers;
 using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
+using Plugin.DeviceInfo;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Plugin.Media.Abstractions;
@@ -93,7 +94,8 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 {
                     Longitude = longitude,
                     Latitude = lattitude,
-                    Name = PlantName
+                    Name = PlantName,
+                    DeviceId = CrossDeviceInfo.Current.Id
                 };
                 if(await _apiService.UploadPictureAsync(Photo.GetStream(), Path.GetExtension(Photo.Path), additionalInfo))
                 {

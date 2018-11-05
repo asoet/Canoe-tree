@@ -9,6 +9,7 @@ using MvvmCross.Navigation;
 using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
 using PlantHunter.Mobile.Core.ViewModels;
+using Plugin.DeviceInfo;
 using Plugin.Media.Abstractions;
 using System.Linq;
 using Xamarin.Forms;
@@ -34,13 +35,15 @@ namespace PlantHunter.Mobile.Core.Pages
                 var plantsSubSet = allPlants.Where(f => f.Longitude != default && f.Latitude != default && f.Name != default);
                 foreach (var item in plantsSubSet)
                 {
+                    Color color = item.DeviceId == CrossDeviceInfo.Current.Id ? Color.Red : Color.Blue;
                     var pin = new Pin()
                     {
                         Type = PinType.SavedPin,
                         Label = item.Name,
                         Position = new Position(item.Latitude, item.Longitude),
-                        Tag = item
-                    };
+                        Tag = item,
+                        Icon = BitmapDescriptorFactory.DefaultMarker(color)
+                };
                     map.Pins.Add(pin);
                 }
             });

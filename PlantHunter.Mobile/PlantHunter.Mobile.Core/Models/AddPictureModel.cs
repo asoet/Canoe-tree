@@ -9,5 +9,6 @@ namespace PlantHunter.Mobile.Core.Models
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public string Name { get; set; }
+        public string DeviceId { get; set; }
     }
 }

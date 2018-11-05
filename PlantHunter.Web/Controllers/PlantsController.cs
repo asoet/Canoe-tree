@@ -65,7 +65,7 @@ namespace PlantHunter.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name);
+                var plant = new Plant(plantViewModel.Longitude, plantViewModel.Latitude, plantViewModel.Name, plantViewModel.DeviceId);
 
                 //Save image to folder
                 //TODO: save to more reliable file provider as: azure blob storage, amazon s3 ed.
