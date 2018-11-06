@@ -4,19 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
+using PlantHunter.Web.NotificationHubs;
 using web.Data;
 
 namespace PlantHunter.Web.Controllers
 {
     public class PlantsController : Controller
     {
+        private NotificationHubProxy _notificationHubProxy;
         private readonly ApplicationDbContext _context;
 
         public PlantsController(ApplicationDbContext context)
         {
             _context = context;
+            _notificationHubProxy = new NotificationHubProxy();
         }
 
         // GET: Plants
@@ -112,6 +116,18 @@ namespace PlantHunter.Web.Controllers
 
                     _context.Update(plantDb);
                     await _context.SaveChangesAsync();
+
+                    var deviceId = await _context.PushRegistrations.FirstOrDefaultAsync(f => f.DeviceId == plantDb.DeviceId);
+                    if(deviceId != null)
+                    {
+                        HubResponse<NotificationOutcome> pushDeliveryResult = await _notificationHubProxy.SendNotification(new NotificationHubs.Notification
+                        {
+                            Content = $"One of your plants is updated: {plantDb.Points} points",
+                            Tags = new string[1] { deviceId.Tag },
+                            Platform = deviceId.MobilePlatform
+                        });
+                    }
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {

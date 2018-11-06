@@ -54,5 +54,48 @@ namespace PlantHunter.Mobile.Core.Services
             }
             return false;
         }
+
+        public async Task<string> GetPushRegistrationId()
+        {
+            string registrationId = string.Empty;
+            HttpResponseMessage response = await _httpClient.GetAsync(string.Concat(_appSettings.ApiUrl, "/api/notifications/register"));
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                registrationId = JsonConvert.DeserializeObject<string>(jsonResponse);
+            }
+
+            return registrationId;
+        }
+
+        public async Task<bool> UnregisterFromNotifications(string registrationId)
+        {
+            HttpResponseMessage response = await _httpClient.DeleteAsync(string.Concat(_appSettings.ApiUrl, $"/api/notificationsunregister/{registrationId}"));
+            if (response.IsSuccessStatusCode)
+                return true;
+            return false;
+        }
+
+        public async Task<bool> EnablePushNotifications(string id, DeviceRegistration deviceUpdate)
+        {
+            string registrationId = string.Empty;
+            var content = new StringContent(JsonConvert.SerializeObject(deviceUpdate), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PutAsync(string.Concat(_appSettings.ApiUrl, $"/api/notifications/enable/{id}"), content);
+            if (response.IsSuccessStatusCode)
+                return true;
+            return false;
+        }
+
+        public async Task<bool> SendNotification(Notification newNotification)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(newNotification), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync(string.Concat(_appSettings.ApiUrl, "/api/notifications/send"), content);
+            if (response.IsSuccessStatusCode)
+                return true;
+            return false;
+        }
+
     }
 }

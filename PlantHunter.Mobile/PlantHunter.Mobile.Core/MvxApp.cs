@@ -9,12 +9,16 @@ using MvvmCross.Base;
 using MvvmCross.IoC;
 using MvvmCross.Plugin.Json;
 using MvvmCross.ViewModels;
+using PlantHunter.Mobile.Core.Services;
+using Plugin.AzurePushNotification;
 using System.Net.Http;
+using Xamarin.Forms;
 
 namespace PlantHunter.Mobile.Core
 {
     public class MvxApp : MvxApplication
     {
+
         public override void Initialize()
         {
             CreatableTypes()
@@ -33,8 +37,19 @@ namespace PlantHunter.Mobile.Core
             Mvx.RegisterSingleton<HttpClient>(() => new HttpClient() );
 
             Resources.AppResources.Culture = Mvx.Resolve<Services.ILocalizeService>().GetCurrentCultureInfo();
+            
 
             RegisterAppStart<ViewModels.MainViewModel>();
+
+            var appSettings = Mvx.Resolve<IAppSettings>();
+            if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
+            {
+                CrossAzurePushNotification.Current.RegisterForPushNotifications();
+            }
+            CrossAzurePushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                appSettings.PushRegistrationId = p.Token;
+            };
         }
     }
 }

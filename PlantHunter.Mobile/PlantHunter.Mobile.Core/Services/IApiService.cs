@@ -10,5 +10,9 @@ namespace PlantHunter.Mobile.Core.Services
     {
         Task<bool> UploadPictureAsync(Stream pictureStream, string contentType, AddPictureModel additionalInfo);
         Task<IEnumerable<Plant>> GetAllPlantsAsync();
+        Task<string> GetPushRegistrationId();
+        Task<bool> UnregisterFromNotifications(string registrationId);
+        Task<bool> EnablePushNotifications(string id, DeviceRegistration deviceUpdate);
+        Task<bool> SendNotification(Notification newNotification);
     }
 }
