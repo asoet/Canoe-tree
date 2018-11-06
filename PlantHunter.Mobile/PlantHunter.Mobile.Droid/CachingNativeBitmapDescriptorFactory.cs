@@ -1,25 +1,25 @@
-﻿using System.Collections.Concurrent;
-using Xamarin.Forms.GoogleMaps.Android.Factories;
-using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
+﻿//using System.Collections.Concurrent;
+//using Xamarin.Forms.GoogleMaps.Android.Factories;
+//using AndroidBitmapDescriptor = Android.Gms.Maps.Model.BitmapDescriptor;
 
-namespace PlantHunter.Mobile.Droid
-{
-    public sealed class CachingNativeBitmapDescriptorFactory : IBitmapDescriptorFactory
-    {
-        private readonly ConcurrentDictionary<string, AndroidBitmapDescriptor> _cache
-            = new ConcurrentDictionary<string, AndroidBitmapDescriptor>();
+//namespace PlantHunter.Mobile.Droid
+//{
+//    public sealed class CachingNativeBitmapDescriptorFactory : IBitmapDescriptorFactory
+//    {
+//        private readonly ConcurrentDictionary<string, AndroidBitmapDescriptor> _cache
+//            = new ConcurrentDictionary<string, AndroidBitmapDescriptor>();
 
-        public AndroidBitmapDescriptor ToNative(Xamarin.Forms.GoogleMaps.BitmapDescriptor descriptor)
-        {
-            var defaultFactory = DefaultBitmapDescriptorFactory.Instance;
+//        public AndroidBitmapDescriptor ToNative(Xamarin.Forms.GoogleMaps.BitmapDescriptor descriptor)
+//        {
+//            var defaultFactory = DefaultBitmapDescriptorFactory.Instance;
 
-            if (!string.IsNullOrEmpty(descriptor.Id))
-            {
-                var cacheEntry = _cache.GetOrAdd(descriptor.Id, _ => defaultFactory.ToNative(descriptor));
-                return cacheEntry;
-            }
+//            if (!string.IsNullOrEmpty(descriptor.Id))
+//            {
+//                var cacheEntry = _cache.GetOrAdd(descriptor.Id, _ => defaultFactory.ToNative(descriptor));
+//                return cacheEntry;
+//            }
 
-            return defaultFactory.ToNative(descriptor);
-        }
-    }
-}
+//            return defaultFactory.ToNative(descriptor);
+//        }
+//    }
+//}

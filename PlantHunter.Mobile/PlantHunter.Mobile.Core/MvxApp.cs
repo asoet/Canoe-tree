@@ -9,6 +9,7 @@ using MvvmCross.Base;
 using MvvmCross.IoC;
 using MvvmCross.Plugin.Json;
 using MvvmCross.ViewModels;
+using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
 using Plugin.AzurePushNotification;
 using System.Net.Http;
@@ -42,13 +43,30 @@ namespace PlantHunter.Mobile.Core
             RegisterAppStart<ViewModels.MainViewModel>();
 
             var appSettings = Mvx.Resolve<IAppSettings>();
+            var apiService = Mvx.Resolve<IApiService>();
             if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
             {
                 CrossAzurePushNotification.Current.RegisterForPushNotifications();
             }
             CrossAzurePushNotification.Current.OnTokenRefresh += (s, p) =>
             {
-                appSettings.PushRegistrationId = p.Token;
+                if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
+                {
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        //var registrationId = await apiService.GetPushRegistrationId();
+                        var handle = p.Token;
+
+                        var deviceUpdate = new DeviceRegistration()
+                        {
+                            Handle = handle,
+                            Platform = MobilePlatform.wns,
+                            Tags = new string[1] { handle }
+                        };
+
+                        var result = await apiService.EnablePushNotifications(handle, deviceUpdate);
+                    });
+                }
             };
         }
     }
