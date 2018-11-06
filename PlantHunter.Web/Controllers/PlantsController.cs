@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
 using web.Data;
+using Microsoft.Azure.NotificationHubs;
 
 namespace PlantHunter.Web.Controllers
 {
@@ -112,6 +112,8 @@ namespace PlantHunter.Web.Controllers
 
                     _context.Update(plantDb);
                     await _context.SaveChangesAsync();
+
+                    await SendPushNotificationToUserAsync(plantDb.DeviceId, plantDb.Points);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -127,6 +129,37 @@ namespace PlantHunter.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(plant);
+        }
+
+        private async Task SendPushNotificationToUserAsync(string deviceId, long points)
+        {
+            var deviceUser = await _context.DeviceUsers.FirstOrDefaultAsync(f => f.DeviceId == deviceId);
+            if (deviceUser == null)
+                return;
+
+            // Create a new Notification Hub client.
+            NotificationHubClient hub = NotificationHubClient
+            .CreateClientFromConnectionString(
+                "Endpoint=sb://hacc2018.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=pnK4e5heYeyG4pXz4wdmTdtKjmGnqHBR3W8XOG5rBkg=", "hacc2018");
+
+            string[] userTag = new string[1];
+            userTag[0] = "username:" + deviceUser.PushNotificationId;
+
+            // Send the message so that all template registrations that contain "messageParam"
+            // receive the notifications. This includes APNS, GCM, WNS, and MPNS template registrations.
+            Dictionary<string, string> templateParams = new Dictionary<string, string>
+            {
+                ["messageParam"] = "You plant submission was updated. You received "+points +" points"
+            };
+
+            try
+            {
+                // Send the push notification and log the results.
+                var result = await hub.SendTemplateNotificationAsync(templateParams, userTag);
+            }
+            catch (System.Exception)
+            {
+            }
         }
 
         // GET: Plants/Delete/5

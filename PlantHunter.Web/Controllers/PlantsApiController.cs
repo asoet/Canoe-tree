@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
 using PlantHunter.Mobile.Web.Models;
@@ -18,6 +19,13 @@ namespace PlantHunter.Mobile.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
+
+        public class DeviceRegistration
+        {
+            public string Platform { get; set; }
+            public string Handle { get; set; }
+            public string[] Tags { get; set; }
+        }
 
         public PlantsApiController(ApplicationDbContext context,
              IHostingEnvironment hostingEnvironment)
@@ -89,7 +97,7 @@ namespace PlantHunter.Mobile.Web.Controllers
 
         // POST: api/PlantsApi
         [HttpPost]
-        public async Task<IActionResult> PostPlant([FromBody] PlantAddViewModel plantViewModel)
+        public async Task<IActionResult> PostPlant([FromBody] PlantAddViewModel plantViewModel, string pns = null)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +115,51 @@ namespace PlantHunter.Mobile.Web.Controllers
             _context.Plants.Add(plant);
             await _context.SaveChangesAsync();
 
+            //Register Device if not registered allready
+            await RegisterDeviceAsync(plant.DeviceId, pns);
+
             return CreatedAtAction("GetPlant", new { id = plant.Id }, plant);
+        }
+
+        private async Task<string> RegisterDeviceAsync(string deviceId, string pns = null)
+        {
+            NotificationHubClient hub = NotificationHubClient
+           .CreateClientFromConnectionString(
+               "Endpoint=sb://hacc2018.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=pnK4e5heYeyG4pXz4wdmTdtKjmGnqHBR3W8XOG5rBkg=", "hacc2018");
+
+            var deviceUser = await _context.DeviceUsers.FirstOrDefaultAsync(f => f.DeviceId == deviceId);
+            if (!string.IsNullOrEmpty(deviceUser.PushNotificationId))
+                return deviceUser.PushNotificationId;
+
+            string newRegistrationId = null;
+
+            // make sure there are no existing registrations for this push handle (used for iOS and Android)
+            if (pns != null)
+            {
+                var registrations = await hub.GetRegistrationsByChannelAsync(pns, 100);
+
+                foreach (RegistrationDescription registration in registrations)
+                {
+                    if (newRegistrationId == null)
+                    {
+                        newRegistrationId = registration.RegistrationId;
+                    }
+                    else
+                    {
+                        await hub.DeleteRegistrationAsync(registration);
+                    }
+                }
+            }
+
+            if (newRegistrationId == null)
+                newRegistrationId = await hub.CreateRegistrationIdAsync();
+
+            deviceUser.PushNotificationId = newRegistrationId;
+            deviceUser.Pns = pns;
+            _context.DeviceUsers.Update(deviceUser);
+            await _context.SaveChangesAsync();
+
+            return newRegistrationId;
         }
 
         private bool PlantExists(Guid id)
