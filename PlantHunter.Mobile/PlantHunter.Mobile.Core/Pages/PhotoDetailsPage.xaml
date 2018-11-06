@@ -5,47 +5,49 @@
              xmlns:res="clr-namespace:PlantHunter.Mobile.Core.Resources;assembly=PlantHunter.Mobile.Core"
              xmlns:mvx="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
              Title="Details">
-  <StackLayout>
-        <Image WidthRequest="120" HeightRequest="120" HorizontalOptions="Start" Source="{Binding PictureSource}"/>
-        <Label  Text="Who are you:"></Label>
-        <Picker SelectedIndexChanged="SortUserPicker_SelectedIndexChanged" ItemsSource="{Binding AllSortUsers}" SelectedItem="{Binding SelectedSortUser}"></Picker>
+    <ScrollView>
+        <StackLayout>
+            <Image WidthRequest="120" HeightRequest="120" HorizontalOptions="Start" Source="{Binding PictureSource}"/>
+            <Label  Text="Who are you:"></Label>
+            <Picker SelectedIndexChanged="SortUserPicker_SelectedIndexChanged" ItemsSource="{Binding AllSortUsers}" SelectedItem="{Binding SelectedSortUser}"></Picker>
 
 
-        <StackLayout x:Name="NameDetails" IsVisible="{Binding ShowForHiker}">
-            <Label Text="Name:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantName}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantName}"></Label>
+            <StackLayout x:Name="NameDetails" IsVisible="{Binding ShowForHiker}">
+                <Label Text="Name:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantName}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantName}"></Label>
+            </StackLayout>
+            <StackLayout x:Name="ScientificNameDetails" IsVisible="{Binding ShowForBotanist}">
+                <Label Text="Scientific name:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantScientificName}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantScientificName}"></Label>
+            </StackLayout>
+            <StackLayout x:Name="FamilyDetails" IsVisible="{Binding ShowForCitizenScientist}">
+                <Label Text="Family:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantFamily}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantFamily}"></Label>
+            </StackLayout>
+            <StackLayout x:Name="DescriptionDetails" IsVisible="{Binding ShowForCitizenScientist}">
+                <Label Text="Description of plant:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantDescription}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantDescription}"></Label>
+            </StackLayout>
+            <StackLayout x:Name="EndangeredLevelDetails" IsVisible="{Binding ShowForCitizenScientist}">
+                <Label Text="Endangered Level:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantEndangeredLevel}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantEndangeredLevel}"></Label>
+            </StackLayout>
+            <StackLayout x:Name="SurroundingDetails" IsVisible="{Binding ShowForCitizenScientist}">
+                <Label Text="Surrounding details:"></Label>
+                <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantSurrounding}"></Entry>
+                <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantSurrounding}"></Label>
+            </StackLayout>
+            <Button Command="{Binding UploadPictureCommand}" IsVisible="{Binding IsNotExisiting}" Text="Upload"></Button>
+
+            <StackLayout x:Name="Points" IsVisible="{Binding IsExisiting}">
+                <Label Text="Points:"></Label>
+                <Label FontAttributes="Bold" Text="{Binding PlantPoints}"></Label>
+            </StackLayout>
         </StackLayout>
-        <StackLayout x:Name="ScientificNameDetails" IsVisible="{Binding ShowForBotnist}">
-            <Label Text="Scientific name:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantScientificName}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantScientificName}"></Label>
-        </StackLayout>
-        <StackLayout x:Name="FamilyDetails" IsVisible="{Binding ShowForCitizenScientist}">
-            <Label Text="Family:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantFamily}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantFamily}"></Label>
-        </StackLayout>
-        <StackLayout x:Name="DescriptionDetails" IsVisible="{Binding ShowForCitizenScientist}">
-            <Label Text="Description of plant:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantDescription}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantDescription}"></Label>
-        </StackLayout>
-        <StackLayout x:Name="EndangeredLevelDetails" IsVisible="{Binding ShowForCitizenScientist}">
-            <Label Text="Endangered Level:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantEndangeredLevel}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantEndangeredLevel}"></Label>
-        </StackLayout>
-        <StackLayout x:Name="SurroundingDetails" IsVisible="{Binding ShowForCitizenScientist}">
-            <Label Text="Surrounding details:"></Label>
-            <Entry IsVisible="{Binding IsNotExisiting}" Text="{Binding PlantSurrounding}"></Entry>
-            <Label IsVisible="{Binding IsExisiting}" FontAttributes="Bold" Text="{Binding PlantSurrounding}"></Label>
-        </StackLayout>
-        <Button Command="{Binding UploadPictureCommand}" IsVisible="{Binding IsNotExisiting}" Text="Upload"></Button>
-      
-        <StackLayout x:Name="Points" IsVisible="{Binding IsExisiting}">
-            <Label Text="Points:"></Label>
-            <Label FontAttributes="Bold" Text="{Binding PlantPoints}"></Label>
-        </StackLayout>
-    </StackLayout>
+    </ScrollView>
 </mvx:MvxContentPage>

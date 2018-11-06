@@ -19,12 +19,12 @@ namespace PlantHunter.Mobile.Core.Pages
         }
 
         private const string Hiker = "Hiker";
-        private const string Botnist = "Botnist";
+        private const string Botanist = "Botanist";
         private const string CitizenScientist = "Citizen Scientist";
 
         //public bool ShowForHiker { get; set; }
         //public bool ShowForCitizenScientist { get; set; }
-        //public bool ShowForBotnist { get; set; }
+        //public bool ShowForBotanist { get; set; }
 
         private void SortUserPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -49,7 +49,7 @@ namespace PlantHunter.Mobile.Core.Pages
                     EndangeredLevelDetails.IsVisible = true;
                     SurroundingDetails.IsVisible = true;
                     break;
-                case Botnist:
+                case Botanist:
                     NameDetails.IsVisible = true;
                     ScientificNameDetails.IsVisible = true;
                     FamilyDetails.IsVisible = true;

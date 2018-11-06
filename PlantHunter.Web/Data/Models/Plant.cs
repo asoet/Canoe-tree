@@ -15,6 +15,7 @@ namespace PlantHunter.Mobile.Web.Data.Models
 
         public Plant(double longitude, double latitude, string name, string deviceId, string scientificName, string family, string endangeredLevel, string surrounding, string description)
         {
+            Id = Guid.NewGuid();
             Longitude = longitude;
             Latitude = latitude;
             Name = name;

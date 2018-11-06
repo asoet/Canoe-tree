@@ -26,7 +26,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
     public class PhotoDetailsViewModel : MvxViewModel<(ImageSource source, MediaFile photo, Plant plant)>
     {
         private const string Hiker = "Hiker";
-        private const string Botnist = "Botnist";
+        private const string Botanist = "Botanist";
         private const string CitizenScientist = "Citizen Scientist";
 
         private readonly IMvxNavigationService _navigationService;
@@ -47,7 +47,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
         {
             Hiker,
             CitizenScientist,
-            Botnist
+            Botanist
         };
 
         //Fields

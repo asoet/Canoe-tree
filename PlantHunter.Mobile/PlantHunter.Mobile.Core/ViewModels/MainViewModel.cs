@@ -51,6 +51,7 @@ namespace PlantHunter.Mobile.Core.ViewModels
                 else
                 {
                     var imageSource = ImageSource.FromStream(() => photo.GetStream());
+                    
                     await _navigationService.Navigate<PhotoDetailsViewModel, (ImageSource source, MediaFile photo, Plant plant)>((imageSource, photo, null));
                 }
                 TakePictureButtonEnabled = true;
