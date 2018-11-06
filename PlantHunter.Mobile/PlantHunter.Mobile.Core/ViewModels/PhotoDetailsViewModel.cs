@@ -88,6 +88,11 @@ namespace PlantHunter.Mobile.Core.ViewModels
             {
                 PictureSource = ImageSource.FromUri(new Uri(_appSettings.ApiUrl + Plant.PlantFileUrl));
                 PlantName = Plant.Name;
+                PlantDescription = Plant.Description;
+                PlantEndangeredLevel = Plant.EndangeredLevel;
+                PlantFamily = Plant.Family;
+                PlantScientificName = Plant.ScientificName;
+                PlantSurrounding = Plant.Surrounding;
                 PlantPoints = Plant.Points.ToString();
                 IsNotExisiting = false;
                 IsExisiting = true;
