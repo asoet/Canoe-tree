@@ -20,7 +20,7 @@ namespace PlantHunter.Web.Controllers
         public PlantsController(ApplicationDbContext context)
         {
             _context = context;
-            _notificationHubProxy = new NotificationHubProxy();
+            _notificationHubProxy = new NotificationHubProxy(_context);
         }
 
         // GET: Plants

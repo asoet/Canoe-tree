@@ -5,6 +5,7 @@
 
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
+using PlantHunter.Mobile.Core.Services;
 
 namespace PlantHunter.Mobile.Droid
 {
@@ -15,6 +16,7 @@ namespace PlantHunter.Mobile.Droid
             base.InitializeFirstChance();
 
             Mvx.RegisterSingleton<Core.Services.ILocalizeService>(() => new Services.LocalizeService());
+            Mvx.RegisterSingleton<ITokenReceiver>(new TokenReceiver());
         }
     }
 }

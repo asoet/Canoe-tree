@@ -35,6 +35,15 @@ namespace PlantHunter.Mobile.Core.Services
             get { return Preferences.Get(PushRegistrationIdKey, PushRegistrationIdDefaultValue); }
             set { Preferences.Set(PushRegistrationIdKey, value); }
         }
+
         
+        public const string HandleKey = "HandleKey";
+        public const string HandleDefaultValue = "";
+
+        public string Handle
+        {
+            get { return Preferences.Get(HandleKey, HandleDefaultValue); }
+            set { Preferences.Set(HandleKey, value); }
+        }
     }
 }

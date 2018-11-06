@@ -13,5 +13,6 @@ namespace PlantHunter.Web.NotificationHubs
         public MobilePlatform Platform { get; set; }
         public string Handle { get; set; }
         public string[] Tags { get; set; }
+        public string DeviceId { get; set; }
     }
 }

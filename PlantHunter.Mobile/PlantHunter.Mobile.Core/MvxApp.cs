@@ -11,8 +11,9 @@ using MvvmCross.Plugin.Json;
 using MvvmCross.ViewModels;
 using PlantHunter.Mobile.Core.Models;
 using PlantHunter.Mobile.Core.Services;
-using Plugin.AzurePushNotification;
+using Plugin.DeviceInfo;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace PlantHunter.Mobile.Core
@@ -33,41 +34,26 @@ namespace PlantHunter.Mobile.Core
                 .RegisterAsLazySingleton();
 
             Mvx.RegisterType<Services.IAppSettings, Services.AppSettings>();
+            Mvx.RegisterType<IPushRegistration,PushRegistration>();
             Mvx.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
             Mvx.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
             Mvx.RegisterSingleton<HttpClient>(() => new HttpClient() );
 
             Resources.AppResources.Culture = Mvx.Resolve<Services.ILocalizeService>().GetCurrentCultureInfo();
             
-
             RegisterAppStart<ViewModels.MainViewModel>();
 
-            var appSettings = Mvx.Resolve<IAppSettings>();
-            var apiService = Mvx.Resolve<IApiService>();
-            if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
+            if(Mvx.TryResolve(out ITokenReceiver tokenReceiver))
             {
-                CrossAzurePushNotification.Current.RegisterForPushNotifications();
-            }
-            CrossAzurePushNotification.Current.OnTokenRefresh += (s, p) =>
-            {
-                if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
+                var token = tokenReceiver.GetHandle();
+                if(!string.IsNullOrEmpty(token))
                 {
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        //var registrationId = await apiService.GetPushRegistrationId();
-                        var handle = p.Token;
-
-                        var deviceUpdate = new DeviceRegistration()
-                        {
-                            Handle = handle,
-                            Platform = MobilePlatform.wns,
-                            Tags = new string[1] { handle }
-                        };
-
-                        var result = await apiService.EnablePushNotifications(handle, deviceUpdate);
-                    });
+                    Mvx.Resolve<IAppSettings>().Handle = token;
+                    Mvx.Resolve<IPushRegistration>().Init();
                 }
-            };
+               
+            }
         }
+
     }
 }

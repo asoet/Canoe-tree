@@ -1,19 +1,23 @@
 ﻿using Microsoft.Azure.NotificationHubs;
 using Microsoft.Azure.NotificationHubs.Messaging;
+using Microsoft.EntityFrameworkCore;
 using PlantHunter.Web.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using web.Data;
 
 namespace PlantHunter.Web.NotificationHubs
 {
     public class NotificationHubProxy
     {
         private NotificationHubClient _hubClient;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public NotificationHubProxy()
+        public NotificationHubProxy(ApplicationDbContext applicationDbContext)
         {
+            _applicationDbContext = applicationDbContext;
             _hubClient = NotificationHubClient.CreateClientFromConnectionString(NotificationHubConfiguration.ConnectionString, NotificationHubConfiguration.HubName);
         }
 
@@ -69,9 +73,20 @@ namespace PlantHunter.Web.NotificationHubs
             if (deviceUpdate.Tags != null)
                 registrationDescription.Tags = new HashSet<string>(deviceUpdate.Tags);
 
+
             try
             {
                 await _hubClient.CreateOrUpdateRegistrationAsync(registrationDescription);
+                var device = await _applicationDbContext.PushRegistrations.FirstOrDefaultAsync(f => f.DeviceId == deviceUpdate.DeviceId);
+                if(device == null)
+                {
+                    _applicationDbContext.PushRegistrations.Add(new Data.Models.PushRegistration { DeviceId = deviceUpdate.DeviceId, MobilePlatform = deviceUpdate.Platform, Tag = deviceUpdate.Tags.First() });
+                }
+                else
+                {
+                    device.Tag = deviceUpdate.Tags.First();
+                }
+                await _applicationDbContext.SaveChangesAsync();
                 return new HubResponse();
             }
             catch (MessagingException)

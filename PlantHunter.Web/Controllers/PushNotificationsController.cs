@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.NotificationHubs;
 using PlantHunter.Web.NotificationHubs;
+using web.Data;
 
 namespace PlantHunter.Web.Controllers
 {
@@ -21,10 +22,12 @@ namespace PlantHunter.Web.Controllers
     public class PushNotificationsController : Controller
     {
         private NotificationHubProxy _notificationHubProxy;
+        private readonly ApplicationDbContext _context;
 
-        public PushNotificationsController()
+        public PushNotificationsController(ApplicationDbContext context)
         {
-            _notificationHubProxy = new NotificationHubProxy();
+            _context = context;
+            _notificationHubProxy = new NotificationHubProxy(_context);
         }
 
         /// 
