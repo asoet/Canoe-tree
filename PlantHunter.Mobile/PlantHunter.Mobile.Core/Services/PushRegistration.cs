@@ -31,7 +31,8 @@ namespace PlantHunter.Mobile.Core.Services
                     {
                         Handle = handle,
                         Platform = MobilePlatform.wns,
-                        Tags = new string[1] { registrationId }
+                        Tags = new string[1] { registrationId },
+                        DeviceId = Plugin.DeviceInfo.CrossDeviceInfo.Current.Id
                     };
 
                     var result = await _apiService.EnablePushNotifications(registrationId, deviceUpdate);

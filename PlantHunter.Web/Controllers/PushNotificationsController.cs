@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.NotificationHubs;
+using Microsoft.EntityFrameworkCore;
 using PlantHunter.Web.NotificationHubs;
 using web.Data;
 
@@ -30,30 +31,30 @@ namespace PlantHunter.Web.Controllers
             _notificationHubProxy = new NotificationHubProxy(_context);
         }
 
-        /// 
-        /// <summary>
-        /// Get registration ID
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("register")]
-        public async Task<IActionResult> CreatePushRegistrationId()
-        {
-            var registrationId = await _notificationHubProxy.CreateRegistrationId();
-            return Ok(registrationId);
-        }
+        ///// 
+        ///// <summary>
+        ///// Get registration ID
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("register")]
+        //public async Task<IActionResult> CreatePushRegistrationId()
+        //{
+        //    var registrationId = await _notificationHubProxy.CreateRegistrationId();
+        //    return Ok(registrationId);
+        //}
 
-        /// 
-        /// <summary>
-        /// Delete registration ID and unregister from receiving push notifications
-        /// </summary>
-        /// <param name="registrationId"></param>
-        /// <returns></returns>
-        [HttpDelete("unregister/{registrationId}")]
-        public async Task<IActionResult> UnregisterFromNotifications(string registrationId)
-        {
-            await _notificationHubProxy.DeleteRegistration(registrationId);
-            return Ok();
-        }
+        ///// 
+        ///// <summary>
+        ///// Delete registration ID and unregister from receiving push notifications
+        ///// </summary>
+        ///// <param name="registrationId"></param>
+        ///// <returns></returns>
+        //[HttpDelete("unregister/{registrationId}")]
+        //public async Task<IActionResult> UnregisterFromNotifications(string registrationId)
+        //{
+        //    await _notificationHubProxy.DeleteRegistration(registrationId);
+        //    return Ok();
+        //}
 
         /// 
         /// <summary>
@@ -65,12 +66,21 @@ namespace PlantHunter.Web.Controllers
         [HttpPut("enable/{id}")]
         public async Task<IActionResult> RegisterForPushNotifications(string id, [FromBody] DeviceRegistration deviceUpdate)
         {
-            HubResponse registrationResult = await _notificationHubProxy.RegisterForPushNotifications(id, deviceUpdate);
-
-            if (registrationResult.CompletedWithSuccess)
-                return Ok();
-
-            return BadRequest("An error occurred while sending push notification: " + registrationResult.FormattedErrorMessages);
+            var device = await _context.PushRegistrations.FirstOrDefaultAsync(f => f.DeviceId == deviceUpdate.DeviceId);
+            if (device == null)
+            {
+                _context.PushRegistrations.Add(new Data.Models.PushRegistration { DeviceId = deviceUpdate.DeviceId, MobilePlatform = deviceUpdate.Platform, Tag = deviceUpdate.Tags.First() });
+            }
+            else
+            {
+                device.Tag = deviceUpdate.Tags.First();
+                _context.Update(device);
+            }
+            await _context.SaveChangesAsync();
+            //HubResponse registrationResult = await _notificationHubProxy.RegisterForPushNotifications(id, deviceUpdate);
+            //if (registrationResult.CompletedWithSuccess)
+            return Ok();
+            //return BadRequest("An error occurred while sending push notification: " + registrationResult.FormattedErrorMessages);
         }
 
     }

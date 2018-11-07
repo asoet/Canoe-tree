@@ -7,6 +7,7 @@ using Android.App;
 using Android.OS;
 using Android.Runtime;
 using Firebase;
+using Plugin.AzurePushNotification;
 using System;
 
 namespace PlantHunter.Mobile.Droid
@@ -30,7 +31,29 @@ namespace PlantHunter.Mobile.Droid
         {
             base.OnCreate();
             RegisterActivityLifecycleCallbacks(this);
-            
+            //Set the default notification channel for your app when running Android Oreo
+            if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            {
+                //Change for your default notification channel id here
+                AzurePushNotificationManager.DefaultNotificationChannelId = "DefaultChannel";
+
+                //Change for your default notification channel name here
+                AzurePushNotificationManager.DefaultNotificationChannelName = "General";
+            }
+
+            //If debug you should reset the token each time.
+#if DEBUG
+            AzurePushNotificationManager.Initialize(this, "Endpoint=sb://hacc2018.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=uGcmRtQmCf4aaJTg12P8wx7jcyEpUJxwM19Jxfi1jR0=", "HACC2018", true);
+#else
+              AzurePushNotificationManager.Initialize(this, "Endpoint=sb://hacc2018.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=uGcmRtQmCf4aaJTg12P8wx7jcyEpUJxwM19Jxfi1jR0=", "HACC2018",false);
+#endif
+
+            //Handle notification when app is closed here
+            CrossAzurePushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+
+
+            };
             //A great place to initialize Xamarin.Insights and Dependency Services!
         }
 

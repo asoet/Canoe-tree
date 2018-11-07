@@ -13,6 +13,7 @@ namespace PlantHunter.Mobile.Core.Models
         public MobilePlatform Platform { get; set; }
         public string Handle { get; set; }
         public string[] Tags { get; set; }
+        public string DeviceId { get; set; }
     }
 
     public enum MobilePlatform
