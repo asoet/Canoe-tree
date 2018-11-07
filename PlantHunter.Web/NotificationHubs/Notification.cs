@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlantHunter.Web.NotificationHubs
 {
-    public class Notification : DeviceRegistration
+    public class PushNotification : DeviceRegistration
     {
         public string Content { get; set; }
     }

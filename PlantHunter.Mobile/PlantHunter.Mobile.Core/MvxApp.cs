@@ -35,43 +35,66 @@ namespace PlantHunter.Mobile.Core
                 .RegisterAsLazySingleton();
 
             Mvx.RegisterType<Services.IAppSettings, Services.AppSettings>();
-            Mvx.RegisterType<IPushRegistration,PushRegistration>();
+            Mvx.RegisterType<IPushRegistration, PushRegistration>();
             Mvx.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
             Mvx.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
-            Mvx.RegisterSingleton<HttpClient>(() => new HttpClient() );
+            Mvx.RegisterSingleton<HttpClient>(() => new HttpClient());
 
             Resources.AppResources.Culture = Mvx.Resolve<Services.ILocalizeService>().GetCurrentCultureInfo();
-            
+
             RegisterAppStart<ViewModels.MainViewModel>();
 
             var appSettings = Mvx.Resolve<IAppSettings>();
             var apiService = Mvx.Resolve<IApiService>();
+            if(Mvx.TryResolve<ITokenReceiver>(out ITokenReceiver tokenReceiver))
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await InitPush(tokenReceiver.GetHandle());
+                });
+            }
+
+            CrossAzurePushNotification.Current.RegisterForPushNotifications();
             if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
             {
-                CrossAzurePushNotification.Current.RegisterForPushNotifications();
+                CrossAzurePushNotification.Current.RegisterAsync(new string[1] { CrossDeviceInfo.Current.Id });
             }
-            CrossAzurePushNotification.Current.OnTokenRefresh += (s, p) =>
+            CrossAzurePushNotification.Current.OnTokenRefresh += async (s, p) =>
             {
-                if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
-                {
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        //var registrationId = await apiService.GetPushRegistrationId();
-                        var handle = p.Token;
-
-                        var deviceUpdate = new DeviceRegistration()
-                        {
-                            Handle = handle,
-                            Platform = MobilePlatform.gcm,
-                            Tags = new string[1] { handle },
-                            DeviceId = CrossDeviceInfo.Current.Id
-                        };
-
-                        var result = await apiService.EnablePushNotifications(handle, deviceUpdate);
-                    });
-                }
+                await InitPush(p.Token);
             };
         }
 
+        public async Task InitPush(string token)
+        {
+            var appSettings = Mvx.Resolve<IAppSettings>();
+            var apiService = Mvx.Resolve<IApiService>();
+            if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
+            {
+              
+                //var registrationId = await apiService.GetPushRegistrationId();
+                var handle = token;
+                MobilePlatform platform = MobilePlatform.gcm;
+                if(Device.RuntimePlatform == Device.Android)
+                {
+                    platform = MobilePlatform.gcm;
+                }
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    platform = MobilePlatform.apns;
+                }
+
+
+                var deviceUpdate = new DeviceRegistration()
+                {
+                    Handle = handle,
+                    Platform = platform,
+                    Tags = new string[1] { CrossDeviceInfo.Current.Id },
+                    DeviceId = CrossDeviceInfo.Current.Id
+                };
+
+                var result = await apiService.EnablePushNotifications(handle, deviceUpdate);
+            }
+        }
     }
 }

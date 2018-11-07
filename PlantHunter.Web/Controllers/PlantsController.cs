@@ -120,7 +120,7 @@ namespace PlantHunter.Web.Controllers
                     var deviceId = await _context.PushRegistrations.FirstOrDefaultAsync(f => f.DeviceId == plantDb.DeviceId);
                     if(deviceId != null)
                     {
-                        HubResponse<NotificationOutcome> pushDeliveryResult = await _notificationHubProxy.SendNotification(new NotificationHubs.Notification
+                        HubResponse<NotificationOutcome> pushDeliveryResult = await _notificationHubProxy.SendNotification(new NotificationHubs.PushNotification
                         {
                             Content = $"One of your plants is updated: {plantDb.Points} points",
                             Tags = new string[1] { deviceId.Tag },

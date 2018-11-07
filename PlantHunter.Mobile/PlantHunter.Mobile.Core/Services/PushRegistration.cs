@@ -1,4 +1,5 @@
 ﻿using PlantHunter.Mobile.Core.Models;
+using Plugin.DeviceInfo;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,21 +24,20 @@ namespace PlantHunter.Mobile.Core.Services
             {
                 Device.BeginInvokeOnMainThread(async () =>
                 {
-                    var registrationId = await _apiService.GetPushRegistrationId();
-                    _appSettings.PushRegistrationId = registrationId;
+                    //var registrationId = await apiService.GetPushRegistrationId();
                     var handle = _appSettings.Handle;
 
                     var deviceUpdate = new DeviceRegistration()
                     {
                         Handle = handle,
-                        Platform = MobilePlatform.wns,
-                        Tags = new string[1] { registrationId },
-                        DeviceId = Plugin.DeviceInfo.CrossDeviceInfo.Current.Id
+                        Platform = MobilePlatform.gcm,
+                        Tags = new string[1] { CrossDeviceInfo.Current.Id },
+                        DeviceId = CrossDeviceInfo.Current.Id
                     };
 
-                    var result = await _apiService.EnablePushNotifications(registrationId, deviceUpdate);
+                    var result = await _apiService.EnablePushNotifications(handle, deviceUpdate);
                 });
-              
+
             }
         }
     }

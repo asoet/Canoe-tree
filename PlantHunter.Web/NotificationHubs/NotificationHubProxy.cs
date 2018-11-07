@@ -101,53 +101,50 @@ namespace PlantHunter.Web.NotificationHubs
         /// </summary>
         /// <param name="newNotification"></param>
         /// <returns></returns>
-        public async Task<HubResponse<NotificationOutcome>> SendNotification(Notification newNotification)
+        public async Task<HubResponse<NotificationOutcome>> SendNotification(PushNotification newNotification)
         {
-            try
-            {
-                NotificationOutcome outcome = null;
+            string title = "Plant update";
+            string body = newNotification.Content;
+            var data = new { action = "Play", userId = 5 };
+            var pushSent = PushNotificationLogic.SendPushNotification(newNotification.Tags, title, body, data);
 
-                switch (newNotification.Platform)
-                {
-                    case MobilePlatform.wns:
-                        if (newNotification.Tags == null)
-                            outcome = await _hubClient.SendWindowsNativeNotificationAsync(newNotification.Content);
-                        else
-                            outcome = await _hubClient.SendWindowsNativeNotificationAsync(newNotification.Content, newNotification.Tags);
-                        break;
-                    case MobilePlatform.apns:
-                        if (newNotification.Tags == null)
-                            outcome = await _hubClient.SendAppleNativeNotificationAsync(newNotification.Content);
-                        else
-                            outcome = await _hubClient.SendAppleNativeNotificationAsync(newNotification.Content, newNotification.Tags);
-                        break;
-                    case MobilePlatform.gcm:
-                        if (newNotification.Tags == null)
-                            outcome = await _hubClient.SendGcmNativeNotificationAsync(newNotification.Content);
-                        else
-                            outcome = await _hubClient.SendGcmNativeNotificationAsync(newNotification.Content, newNotification.Tags);
-                        break;
-                }
+            return new HubResponse<NotificationOutcome>();
 
-                if (outcome != null)
-                {
-                    if (!((outcome.State == NotificationOutcomeState.Abandoned) ||
-                        (outcome.State == NotificationOutcomeState.Unknown)))
-                        return new HubResponse<NotificationOutcome>();
-                }
+            //try
+            //{
+            //    NotificationOutcome outcome = null;
 
-                return new HubResponse<NotificationOutcome>().SetAsFailureResponse().AddErrorMessage("Notification was not sent due to issue. Please send again.");
-            }
+            //    switch (newNotification.Platform)
+            //    {
+            //        case MobilePlatform.wns:
+            //            if (newNotification.Tags == null)
+            //                outcome = await _hubClient.SendWindowsNativeNotificationAsync(newNotification.Content);
+            //            else
+            //                outcome = await _hubClient.SendWindowsNativeNotificationAsync(newNotification.Content, newNotification.Tags);
+            //            break;
+            //        case MobilePlatform.apns:
+            //            if (newNotification.Tags == null)
+            //                outcome = await _hubClient.SendAppleNativeNotificationAsync(newNotification.Content);
+            //            else
+            //                outcome = await _hubClient.SendAppleNativeNotificationAsync(newNotification.Content, newNotification.Tags);
+            //            break;
+            //        case MobilePlatform.gcm:
+            //            if (newNotification.Tags == null)
+            //                outcome = await _hubClient.SendGcmNativeNotificationAsync(newNotification.Content);
+            //            else
+            //                outcome = await _hubClient.SendGcmNativeNotificationAsync(newNotification.Content, newNotification.Tags);
+            //            break;
+            //    }
 
-            catch (MessagingException ex)
-            {
-                return new HubResponse<NotificationOutcome>().SetAsFailureResponse().AddErrorMessage(ex.Message);
-            }
+            //    if (outcome != null)
+            //    {
+            //        if (!((outcome.State == NotificationOutcomeState.Abandoned) ||
+            //            (outcome.State == NotificationOutcomeState.Unknown)))
+            //            return new HubResponse<NotificationOutcome>();
+            //    }
 
-            catch (ArgumentException ex)
-            {
-                return new HubResponse<NotificationOutcome>().SetAsFailureResponse().AddErrorMessage(ex.Message);
-            }
+            //    return new HubResponse<NotificationOutcome>().SetAsFailureResponse().AddErrorMessage("Notification was not sent due to issue. Please send again.");
+        //}
         }
     }
 }

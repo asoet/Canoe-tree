@@ -29,7 +29,6 @@ namespace PlantHunter.Mobile.Droid
             {
                 throw e;
             }
-            return "";
         }
     }
 }
