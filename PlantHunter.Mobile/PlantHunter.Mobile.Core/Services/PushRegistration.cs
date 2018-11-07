@@ -31,7 +31,7 @@ namespace PlantHunter.Mobile.Core.Services
                     {
                         Handle = handle,
                         Platform = MobilePlatform.gcm,
-                        Tags = new string[1] { CrossDeviceInfo.Current.Id },
+                        Tags = new string[1] { handle },
                         DeviceId = CrossDeviceInfo.Current.Id
                     };
 

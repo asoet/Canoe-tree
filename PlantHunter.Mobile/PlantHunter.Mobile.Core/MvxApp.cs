@@ -53,21 +53,12 @@ namespace PlantHunter.Mobile.Core
                     await InitPush(tokenReceiver.GetHandle());
                 });
             }
-
-            CrossAzurePushNotification.Current.RegisterForPushNotifications();
-            if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
-            {
-                CrossAzurePushNotification.Current.RegisterAsync(new string[1] { CrossDeviceInfo.Current.Id });
-            }
-            CrossAzurePushNotification.Current.OnTokenRefresh += async (s, p) =>
-            {
-                await InitPush(p.Token);
-            };
         }
 
         public async Task InitPush(string token)
         {
             var appSettings = Mvx.Resolve<IAppSettings>();
+            appSettings.Handle = token;
             var apiService = Mvx.Resolve<IApiService>();
             if (string.IsNullOrEmpty(appSettings.PushRegistrationId))
             {
@@ -89,7 +80,7 @@ namespace PlantHunter.Mobile.Core
                 {
                     Handle = handle,
                     Platform = platform,
-                    Tags = new string[1] { CrossDeviceInfo.Current.Id },
+                    Tags = new string[1] { token },
                     DeviceId = CrossDeviceInfo.Current.Id
                 };
 
