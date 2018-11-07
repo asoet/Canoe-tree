@@ -9,5 +9,7 @@ namespace PlantHunter.Mobile.Core.Services
     {
         string ApiUrl { get; set; }
         string Role { get; set; }
+        string PushRegistrationId { get; set; }
+        string Handle { get; set; }
     }
 }

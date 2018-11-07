@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
+using PlantHunter.Web.Data.Models;
 
 namespace web.Data
 {
@@ -15,5 +16,6 @@ namespace web.Data
         }
 
         public DbSet<Plant> Plants { get; set; }
+        public DbSet<PushRegistration> PushRegistrations { get; set; }
     }
 }

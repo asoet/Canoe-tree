@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "803800537976",
+    "firebase_url": "https://hacc2018-85e8b.firebaseio.com",
+    "project_id": "hacc2018-85e8b",
+    "storage_bucket": "hacc2018-85e8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803800537976:android:c594967893584f40",
+        "android_client_info": {
+          "package_name": "com.HACC2018.plantHunter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803800537976-oas48ptkeemaupkdqamjepqqohl2sjv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe5YoccqHyqiDUoewiQU93g1aBuIp84Yo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

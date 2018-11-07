@@ -5,14 +5,16 @@
 
 using Acr.UserDialogs;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Firebase;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Views;
 using MvvmCross.Platforms.Android;
+using Plugin.AzurePushNotification;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps.Android;
 
 namespace PlantHunter.Mobile.Droid
 {
@@ -25,6 +27,9 @@ namespace PlantHunter.Mobile.Droid
         , ScreenOrientation = ScreenOrientation.Portrait)]
     public class SplashScreen : MvxFormsSplashScreenActivity<Setup, Core.MvxApp, Core.FormsApp>
     {
+        internal static readonly string CHANNEL_ID = "my_notification_channel";
+        internal static readonly int NOTIFICATION_ID = 100;
+
         public SplashScreen()
             : base(Resource.Layout.SplashScreen)
         {
@@ -42,15 +47,16 @@ namespace PlantHunter.Mobile.Droid
                     e.NativeView.ContentDescription = e.View.StyleId;
                 }
             };  
-            // Override default BitmapDescriptorFactory by your implementation. 
-            var platformConfig = new PlatformConfig
-            {
-                BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
-            };
-            Xamarin.FormsGoogleMaps.Init(this, bundle, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
+            Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps
             CrossCurrentActivity.Current.Init(this, bundle);
-
+            AzurePushNotificationManager.ProcessIntent(this, Intent);
             base.OnCreate(bundle);
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            AzurePushNotificationManager.ProcessIntent(this, intent);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)

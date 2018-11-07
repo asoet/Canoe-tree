@@ -26,5 +26,24 @@ namespace PlantHunter.Mobile.Core.Services
             get { return Preferences.Get(RoleKey, RoleDefaultValue); }
             set { Preferences.Set(RoleKey, value); }
         }
+
+        public const string PushRegistrationIdKey = "PushRegistrationIdKey";
+        public const string PushRegistrationIdDefaultValue = "";
+
+        public string PushRegistrationId
+        {
+            get { return Preferences.Get(PushRegistrationIdKey, PushRegistrationIdDefaultValue); }
+            set { Preferences.Set(PushRegistrationIdKey, value); }
+        }
+
+        
+        public const string HandleKey = "HandleKey";
+        public const string HandleDefaultValue = "";
+
+        public string Handle
+        {
+            get { return Preferences.Get(HandleKey, HandleDefaultValue); }
+            set { Preferences.Set(HandleKey, value); }
+        }
     }
 }
