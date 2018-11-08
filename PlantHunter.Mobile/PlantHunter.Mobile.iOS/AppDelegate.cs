@@ -1,77 +1,79 @@
-﻿// ---------------------------------------------------------------
-// <author>Paul Datsyuk</author>
-// <url>https://www.linkedin.com/in/pauldatsyuk/</url>
-// ---------------------------------------------------------------
-
+﻿using CarouselView.FormsPlugin.iOS;
+using FFImageLoading.Forms.Touch;
 using Foundation;
-using MvvmCross.Forms.Platforms.Ios.Core;
+using Microcharts.Forms;
+using Microsoft.Identity.Client;
+using PlantHunter.Mobile.Core.ViewModels.Base;
+using PlantHunter.Mobile.iOS.Services;
 using UIKit;
+using Xamarin.Forms;
 
 namespace PlantHunter.Mobile.iOS
 {
-    // The UIApplicationDelegate for the application. This class is responsible for launching the
-    // User Interface of the application, as well as listening (and optionally responding) to application events from iOS.
+    // The UIApplicationDelegate for the application. This class is responsible for launching the 
+    // User Interface of the application, as well as listening (and optionally responding) to 
+    // application events from iOS.
     [Register("AppDelegate")]
-    public class AppDelegate : MvxFormsApplicationDelegate<Setup, Core.MvxApp, Core.FormsApp>
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
-        // class-level declarations
-
-        public override UIWindow Window
-        {
-            get;
-            set;
-        }
-
+        //
+        // This method is invoked when the application has loaded and is ready to run. In this 
+        // method you should instantiate the window, load the UI into it and then make the window
+        // visible.
+        //
+        // You have 17 seconds to return from this method, or iOS will terminate your application.
+        //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            Window = new UIWindow(UIScreen.MainScreen.Bounds);
-            Window.MakeKeyAndVisible();
-            Xamarin.FormsGoogleMaps.Init("your_google_maps_ios_api_key");
+            // Newer version of Xamarin Studio and Visual Studio provide the
+            // ENABLE_TEST_CLOUD compiler directive in the Debug configuration,
+            // but not the Release configuration.
 
-            return base.FinishedLaunching(app, options);
+#if ENABLE_TEST_CLOUD
+            Xamarin.Calabash.Start();
+
+            // Mapping StyleId to iOS Labels
+            Forms.ViewInitialized += (object sender, ViewInitializedEventArgs e) =>
+            {
+                if (null != e.View.StyleId && null != e.NativeView)
+                {
+                    e.NativeView.AccessibilityIdentifier = e.View.StyleId;
+                }
+            };
+#endif
+            Forms.Init();
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
+            CarouselViewRenderer.Init();
+            Renderers.Calendar.Init();
+            Xamarin.FormsMaps.Init();
+            InitChartView();
+            InitXamanimation();
+            Rg.Plugins.Popup.Popup.Init();
+            
+            LoadApplication(new App());
+
+            base.FinishedLaunching(app, options);
+
+            UINavigationBar.Appearance.SetBackgroundImage(new UIImage(), UIBarMetrics.Default);
+            UINavigationBar.Appearance.ShadowImage = new UIImage();
+            UINavigationBar.Appearance.BackgroundColor = UIColor.Clear;
+            UINavigationBar.Appearance.TintColor = UIColor.White;
+            UINavigationBar.Appearance.BarTintColor = UIColor.Clear;
+            UINavigationBar.Appearance.Translucent = true;
+
+
+            return true;
+        }
+        
+
+        static void InitChartView()
+        {
+            var t1 = typeof(ChartView);
         }
 
-        public override void OnResignActivation(UIApplication application)
+        static void InitXamanimation()
         {
-            // Invoked when the application is about to move from active to inactive state.
-            // This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) 
-            // or when the user quits the application and it begins the transition to the background state.
-            // Games should use this method to pause the game.
-
-            base.OnResignActivation(application);
-        }
-
-        public override void DidEnterBackground(UIApplication application)
-        {
-            // Use this method to release shared resources, save user data, invalidate timers and store the application state.
-            // If your application supports background exection this method is called instead of WillTerminate when the user quits.
-
-            base.DidEnterBackground(application);
-        }
-
-        public override void WillEnterForeground(UIApplication application)
-        {
-            // Called as part of the transiton from background to active state.
-            // Here you can undo many of the changes made on entering the background.
-
-            base.WillEnterForeground(application);
-        }
-
-        public override void OnActivated(UIApplication application)
-        {
-            // Restart any tasks that were paused (or not yet started) while the application was inactive. 
-            // If the application was previously in the background, optionally refresh the user interface.
-
-            base.OnActivated(application);
-        }
-
-        public override void WillTerminate(UIApplication application)
-        {
-            // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
-
-            base.WillTerminate(application);
+            var t2 = typeof(Xamanimation.AnimationBase);
         }
     }
 }
-
-

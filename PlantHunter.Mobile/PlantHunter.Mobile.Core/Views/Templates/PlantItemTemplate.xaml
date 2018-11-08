@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    x:Name="Self"
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="PlantHunter.Mobile.Core.Views.Templates.PlantItemTemplate"  
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"   
+    xmlns:controls="clr-namespace:PlantHunter.Mobile.Core.Controls">
+    <ContentView.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="PlantTitleStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource PoppinsRegularLabelStyle}">
+                <Setter Property="TextColor" Value="{StaticResource BlackTextColor}" />
+                <Setter Property="FontSize" Value="{StaticResource MediumSize}" />
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+            <Style x:Key="PlantDescriptionStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="FontSize" Value="{StaticResource LittleSize}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+            
+        </ResourceDictionary>
+    </ContentView.Resources>
+  <ContentView.Content>
+        <Grid
+            RowSpacing="0"
+            WidthRequest="200"
+            Padding="24, 24, 0, 24">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer 
+                            x:Name="tapped" />
+            </Grid.GestureRecognizers>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid 
+                Grid.Row="0"
+                BackgroundColor="{Binding PlantType, Converter={StaticResource PlantTypeToColorConverter}}"
+                />
+            <ffimageloading:CachedImage
+                Grid.Row="1"
+                Source="{Binding PlantFileUrl, Converter={StaticResource PlantImageConverter}}"
+                Aspect="AspectFill"
+                CacheType="Disk"
+                CacheDuration="30">
+                <ffimageloading:CachedImage.LoadingPlaceholder>
+                    <OnPlatform x:TypeArguments="ImageSource">
+                        <On Platform="Android, iOS" Value="placeholder_2" />
+                        <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                    </OnPlatform>
+                </ffimageloading:CachedImage.LoadingPlaceholder>
+                <ffimageloading:CachedImage.ErrorPlaceholder>
+                    <OnPlatform x:TypeArguments="ImageSource">
+                        <On Platform="Android, iOS" Value="placeholder_2" />
+                        <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                    </OnPlatform>
+                </ffimageloading:CachedImage.ErrorPlaceholder>
+            </ffimageloading:CachedImage>
+            <Label
+                Grid.Row="2"
+                Text="{Binding Name}"
+                Style="{StaticResource PlantTitleStyle}"/>
+            <Label
+                Grid.Row="3"
+                Text="{Binding Description}"
+                Style="{StaticResource PlantDescriptionStyle}"/>
+            <Grid
+                Grid.Row="4"
+                Margin="0, 6, 0, 0">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <controls:RatingControl
+                    Grid.Column="0"
+                    Rating="{Binding Points}"
+                    Precision="Full"
+                    HorizontalOptions="Start"
+                    WidthRequest="150">
+                    <controls:RatingControl.ImageFullStar>
+                        <OnPlatform x:TypeArguments="ImageSource">
+                            <On Platform="Android, iOS" Value="ic_star_active" />
+                            <On Platform="UWP" Value="Assets/ic_star_active.png" />
+                        </OnPlatform>
+                    </controls:RatingControl.ImageFullStar>
+                    <controls:RatingControl.ImageEmptyStar>
+                        <OnPlatform x:TypeArguments="ImageSource">
+                            <On Platform="Android, iOS" Value="ic_star_normal" />
+                            <On Platform="UWP" Value="Assets/ic_star_normal.png" />
+                        </OnPlatform>
+                    </controls:RatingControl.ImageEmptyStar>
+                </controls:RatingControl>
+                <Label 
+                    Grid.Column="1"
+                    Text="{Binding Points}"
+                    Style="{StaticResource PlantDescriptionStyle}"/>
+                <Label 
+                    Grid.Column="2"
+                    Text="points"
+                    Style="{StaticResource PlantDescriptionStyle}"
+                    />
+            </Grid>
+        </Grid>
+  </ContentView.Content>
+</ContentView>

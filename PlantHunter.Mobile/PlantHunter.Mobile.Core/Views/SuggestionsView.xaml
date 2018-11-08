@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Name="Self"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="PlantHunter.Mobile.Core.Views.SuggestionsView"    
+    xmlns:controls="clr-namespace:PlantHunter.Mobile.Core.Controls" 
+    xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"  
+    xmlns:utils="clr-namespace:PlantHunter.Mobile.Core.Utils"  
+    xmlns:templates="clr-namespace:PlantHunter.Mobile.Core.Views.Templates"
+    utils:NavigationBarAttachedProperty.TextColor="{StaticResource BlackTextColor}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="NextButtonColor">#BD4B14</Color>
+            <Style x:Key="NextTextStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansSemiBoldLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource WhiteColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource MediumSize}" />
+                <Setter Property="HorizontalOptions"
+                        Value="Center" />
+                <Setter Property="VerticalOptions"
+                        Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid
+            RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="240" />
+            </Grid.RowDefinitions>
+            <controls:iOSStatusBarBackground />
+
+            <AbsoluteLayout
+                Grid.Row="1">
+                <controls:CustomMap  
+                    x:Name="Map"
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    />
+            </AbsoluteLayout>
+            <Grid   AutomationId="complete"
+                    HeightRequest="60"
+                    VerticalOptions="End"
+                    BackgroundColor="{StaticResource NextButtonColor}"
+                    Grid.Row="2">
+                <Label 
+                        Text="Take picture"
+                        Style="{StaticResource NextTextStyle}"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer 
+                            Command="{Binding TakePictureCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+            <Grid
+                Grid.Row="3"
+                BackgroundColor="{StaticResource WhiteColor}">
+                <controls:HorizontalList  
+                    x:Name="plantList"
+                    ListOrientation="Horizontal" 
+                    Margin="0, 5, 0, 0">
+                    <controls:HorizontalList.ItemTemplate>
+                        <DataTemplate>
+                            <templates:PlantItemTemplate />
+                        </DataTemplate>
+                    </controls:HorizontalList.ItemTemplate>
+                </controls:HorizontalList>
+            </Grid>
+            <ActivityIndicator 
+                Grid.Row="1"
+                x:Name="busyIndicator"
+                Color="{StaticResource AccentColor}"
+                IsRunning="{Binding IsBusy}" 
+                IsVisible="{Binding IsBusy}" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

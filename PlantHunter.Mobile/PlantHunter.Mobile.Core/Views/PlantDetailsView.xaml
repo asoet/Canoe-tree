@@ -1,0 +1,699 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="PlantHunter.Mobile.Core.Views.PlantDetailsView"   
+    xmlns:ctrls="clr-namespace:PlantHunter.Mobile.Core.Controls"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"    
+    xmlns:controls="clr-namespace:PlantHunter.Mobile.Core.Controls"
+    xmlns:templates="clr-namespace:PlantHunter.Mobile.Core.Views.Templates"
+    xmlns:utils="clr-namespace:PlantHunter.Mobile.Core.Utils"  
+    xmlns:extensions="clr-namespace:PlantHunter.Mobile.Core.MarkupExtensions"
+    BackgroundColor="{StaticResource WhiteColor}"  
+    utils:NavigationBarAttachedProperty.TextColor="{StaticResource GreenColor}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="PlantTitleStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource BlackTextColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource LargeSize}" />
+                <Setter Property="VerticalOptions" 
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="12, 12, 12, 0" />
+            </Style>
+
+            <Style x:Key="PlantScientificNameStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource BlackTextColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource MediumSize}" />
+                <Setter Property="LineBreakMode" 
+                        Value="TailTruncation" />
+                <Setter Property="HeightRequest" 
+                        Value="36" />
+                <Setter Property="Margin"
+                        Value="12, 0" />
+            </Style>
+
+            <Style x:Key="PlantPointsBigStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource GreenColor}" />
+                <Setter Property="FontSize">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android, iOS" Value="{StaticResource LargerSize}" />
+                            <On Platform="UWP" Value="{StaticResource BigSize}" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="VerticalOptions" 
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="0, 12, 0, 0" />
+            </Style>
+
+            <Style x:Key="PlantPointsSmallStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource PlantPointsBigStyle}">
+                <Setter Property="FontSize"
+                        Value="{StaticResource MidMediumSize}" />
+            </Style>
+
+            <Style x:Key="TabTextStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource PoppinsRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource BlackColor}" />
+                <Setter Property="FontSize" 
+                        Value="{StaticResource MediumSize}" />
+                <Setter Property="HorizontalTextAlignment" 
+                        Value="Center" />
+                <Setter Property="HorizontalOptions" 
+                        Value="Center" />
+                <Setter Property="VerticalOptions" 
+                        Value="Center" />
+                <Setter Property="Margin" 
+                        Value="24, 0" />
+            </Style>
+
+            <Color x:Key="AccentTabColor">#378D93</Color>
+
+            <Color x:Key="TabSeparatorColor">#F4F5F5</Color>
+
+            <Style x:Key="TabSeparatorStyle" 
+                   TargetType="Label">
+                <Setter Property="BackgroundColor" 
+                        Value="{StaticResource TabSeparatorColor}" />
+                <Setter Property="HeightRequest" 
+                        Value="1" />
+                <Setter Property="VerticalOptions" 
+                        Value="End" />
+            </Style>
+
+            <Style x:Key="SelectedTabStyle" 
+                   TargetType="Label">
+                <Setter Property="BackgroundColor" 
+                        Value="{StaticResource AccentTabColor}" />
+                <Setter Property="HeightRequest" 
+                        Value="2" />
+                <Setter Property="VerticalOptions" 
+                        Value="End" />
+                <Setter Property="Margin" 
+                        Value="24, 1" />
+            </Style>
+
+            <Style x:Key="PlantDescriptionStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource BlackTextColor}" />
+                <Setter Property="FontSize" 
+                        Value="{StaticResource MediumSize}" />
+                <Setter Property="LineBreakMode" 
+                        Value="WordWrap" />
+                <Setter Property="Margin" 
+                        Value="24, 12, 24, 0" />
+            </Style>
+
+            <Style x:Key="SectionTitleStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansRegularLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource BlackTextColor}" />
+                <Setter Property="FontSize" 
+                        Value="{StaticResource BigSize}" />
+                <Setter Property="Margin" 
+                        Value="24, 12, 24, 0" />
+            </Style>
+
+            <Style x:Key="ServicesStyle" 
+                   TargetType="controls:HorizontalList">
+                <Setter Property="Margin" 
+                        Value="24, 0" />
+            </Style>
+
+            <Style x:Key="RatingStyle" 
+                   TargetType="controls:RatingControl">
+                <Setter Property="HorizontalOptions"
+                        Value="End" />
+                <Setter Property="HeightRequest" 
+                        Value="12" />
+                <Setter Property="WidthRequest">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android, iOS" Value="80" />
+                            <On Platform="UWP" Value="100" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Margin">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <On Platform="Android, iOS" Value="0, 0, 12, 22" />
+                            <On Platform="UWP" Value="0, 0, 12, 20" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Color x:Key="NextButtonColor">#BD4B14</Color>
+
+            <Style x:Key="ParallaxScrollStyle" 
+                   TargetType="ScrollView">
+                <Setter Property="HorizontalOptions"
+                        Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" 
+                        Value="FillAndExpand" />
+                <Setter Property="Margin" 
+                        Value="0, 0, 0, 60" />
+            </Style>
+
+            <Style x:Key="NextTextStyle" 
+                   TargetType="Label"
+                   BasedOn="{StaticResource FiraSansSemiBoldLabelStyle}">
+                <Setter Property="TextColor" 
+                        Value="{StaticResource WhiteColor}" />
+                <Setter Property="FontSize"
+                        Value="{StaticResource MediumSize}" />
+                <Setter Property="HorizontalOptions"
+                        Value="Center" />
+                <Setter Property="VerticalOptions"
+                        Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid    
+            AutomationId="plant"
+            RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <controls:iOSStatusBarBackground 
+                Grid.Row="0"/>
+            <Grid
+                Grid.Row="1">
+                <ContentView
+                    x:Name="HeaderView"
+                    HorizontalOptions="FillAndExpand" 
+                    VerticalOptions="FillAndExpand">
+                    <Grid>
+                        <ffimageloading:CachedImage 
+                            Source="{Binding Plant.PlantFileUrl, Converter={StaticResource PlantImageConverter}}" 
+                            Aspect="AspectFill"
+                            DownsampleToViewSize="true"
+                            HeightRequest="420"
+					        HorizontalOptions="FillAndExpand"
+					        VerticalOptions="Start" 
+                            IsVisible="{Binding IsExisting}">
+                            <ffimageloading:CachedImage.LoadingPlaceholder>
+                                <OnPlatform x:TypeArguments="ImageSource">
+                                    <On Platform="Android, iOS" Value="placeholder_2" />
+                                    <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                                </OnPlatform>
+                            </ffimageloading:CachedImage.LoadingPlaceholder>
+                            <ffimageloading:CachedImage.ErrorPlaceholder>
+                                <OnPlatform x:TypeArguments="ImageSource">
+                                    <On Platform="Android, iOS" Value="placeholder_2" />
+                                    <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                                </OnPlatform>
+                            </ffimageloading:CachedImage.ErrorPlaceholder>
+                        </ffimageloading:CachedImage>
+                        <ffimageloading:CachedImage 
+                            Source="{Binding ImageSource}" 
+                            Aspect="AspectFill"
+                            DownsampleToViewSize="true"
+                            HeightRequest="420"
+					        HorizontalOptions="FillAndExpand"
+					        VerticalOptions="Start" 
+                            IsVisible="{Binding IsNotExisting}">
+                            <ffimageloading:CachedImage.LoadingPlaceholder>
+                                <OnPlatform x:TypeArguments="ImageSource">
+                                    <On Platform="Android, iOS" Value="placeholder_2" />
+                                    <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                                </OnPlatform>
+                            </ffimageloading:CachedImage.LoadingPlaceholder>
+                            <ffimageloading:CachedImage.ErrorPlaceholder>
+                                <OnPlatform x:TypeArguments="ImageSource">
+                                    <On Platform="Android, iOS" Value="placeholder_2" />
+                                    <On Platform="UWP" Value="Assets/placeholder_2.png" />
+                                </OnPlatform>
+                            </ffimageloading:CachedImage.ErrorPlaceholder>
+                        </ffimageloading:CachedImage>
+                        <Grid
+                            x:Name="SubHeaderView"
+                            BackgroundColor="{StaticResource WhiteColor}"
+                            HeightRequest="80"
+                            VerticalOptions="Start"
+                            Opacity="1">
+                            <Grid.Padding>
+                                <OnPlatform x:TypeArguments="Thickness">
+                                    <On Platform="Android, UWP" Value="12, 0" />
+                                    <On Platform="iOS" Value="12, 24, 12, 0" />
+                                </OnPlatform>
+                            </Grid.Padding>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6*" />
+                                <ColumnDefinition Width="4*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Text="{Binding Plant.Name}"
+                                Style="{StaticResource PlantTitleStyle}"/>
+                            <Label
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                Text="{Binding Plant.ScientificName}"
+                                Style="{StaticResource PlantScientificNameStyle}"/>
+                            <StackLayout
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Orientation="Horizontal"
+                                HorizontalOptions="End"
+                                Margin="0, 0, 12, 0">
+                                <Label 
+                                    Text="{Binding Plant.Points}"
+                                    Style="{StaticResource PlantPointsBigStyle}"
+                                    />
+                                <Label 
+                                    Text="Points"
+                                    Style="{StaticResource PlantPointsBigStyle}"
+                                    />
+                            </StackLayout>
+                            <controls:RatingControl
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Rating="{Binding Plant.Points}"
+                                Precision="Full"
+                                Style="{StaticResource RatingStyle}">
+                                <controls:RatingControl.ImageFullStar>
+                                    <OnPlatform x:TypeArguments="ImageSource">
+                                        <On Platform="Android, iOS" Value="ic_star_active" />
+                                        <On Platform="UWP" Value="Assets/ic_star_active.png" />
+                                    </OnPlatform>
+                                </controls:RatingControl.ImageFullStar>
+                                <controls:RatingControl.ImageEmptyStar>
+                                    <OnPlatform x:TypeArguments="ImageSource">
+                                        <On Platform="Android, iOS" Value="ic_star_normal" />
+                                        <On Platform="UWP" Value="Assets/ic_star_normal.png" />
+                                    </OnPlatform>
+                                </controls:RatingControl.ImageEmptyStar>
+                            </controls:RatingControl>
+                        </Grid>
+                    </Grid>
+                </ContentView>
+                <controls:ParallaxControl
+                    x:Name="ParallaxScroll" 
+                    Style="{StaticResource ParallaxScrollStyle}">
+                    <Grid   
+                        ColumnSpacing="0"
+                        RowSpacing="0"
+                        VerticalOptions="FillAndExpand">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition>
+                                <RowDefinition.Height>
+                                    <OnPlatform x:TypeArguments="GridLength">
+                                        <On Platform="iOS" Value="370" />
+                                        <On Platform="Android, UWP" Value="400" />
+                                    </OnPlatform>
+                                </RowDefinition.Height>
+                            </RowDefinition>
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            BackgroundColor="{StaticResource WhiteColor}">
+                            <Label   
+                                Text="Hiker"
+                                Style="{StaticResource TabTextStyle}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Hiker}" Value="true" >
+                                        <Setter Property="TextColor" Value="{StaticResource AccentTabColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Grid 
+                                Style="{StaticResource TabSeparatorStyle}"/>
+                            <Grid   
+                                IsVisible="{Binding Hiker}"
+                                Style="{StaticResource SelectedTabStyle}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding HikerCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                        <Grid
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            BackgroundColor="{StaticResource WhiteColor}">
+                            <Label   
+                                Text="ScientificCitizen"
+                                Style="{StaticResource TabTextStyle}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding ScientificCitizen}" Value="true" >
+                                        <Setter Property="TextColor" Value="{StaticResource AccentTabColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Grid 
+                                Style="{StaticResource TabSeparatorStyle}"/>
+                            <Grid  
+                                IsVisible="{Binding ScientificCitizen}"
+                                Style="{StaticResource SelectedTabStyle}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding ScientificCitizenCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                        <Grid
+                            Grid.Column="2"
+                            Grid.Row="1" 
+                            BackgroundColor="{StaticResource WhiteColor}">
+                            <Label   
+                                Text="Botanist"
+                                Style="{StaticResource TabTextStyle}">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Botanist}" Value="true" >
+                                        <Setter Property="TextColor" Value="{StaticResource AccentTabColor}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Grid 
+                                Style="{StaticResource TabSeparatorStyle}"/>
+                            <Grid     
+                                IsVisible="{Binding Botanist}"
+                                Style="{StaticResource SelectedTabStyle}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BotanistCommand}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                        <Grid
+                            Grid.Column="0"
+                            Grid.ColumnSpan="3"
+                            Grid.Row="2" 
+                            BackgroundColor="{StaticResource WhiteColor}">
+                            <Grid  
+                                IsVisible="{Binding MyHotel}">
+                                <StackLayout>
+                                    <Label   
+                                        Text="Name"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Name}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder="Plant name"
+                        Text="{Binding Plant.Name, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                </StackLayout>
+                            </Grid>
+                            <Grid  
+                                IsVisible="{Binding ScientificCitizen}">
+                                <StackLayout>
+                                    <Label   
+                                        Text="Name"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label   
+                                        Text="{Binding Plant.Name}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Name, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label 
+                                        Text="Description"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Description}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Description, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Family"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Family}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Family, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Endangered level"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.EndangeredLevel}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.EndangeredLevel, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Surrounding info"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Surrounding}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Surrounding, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+
+                                </StackLayout>
+                            </Grid>
+                            <Grid  
+                                IsVisible="{Binding Botanist}">
+                                <StackLayout>
+                                    <Label   
+                                        Text="Name"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Name}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Name, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Scientific name"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.ScientificName}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.ScientificName, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Description"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Description}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Description, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Family"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Family}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Family, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Endangered level"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.EndangeredLevel}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.EndangeredLevel, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                    <Label   
+                                        Text="Surrounding info"
+                                        Style="{StaticResource SectionTitleStyle}"/>
+                                    <Label 
+                                        Text="{Binding Plant.Surrounding}"
+                                        Style="{StaticResource PlantDescriptionStyle}"
+                                        IsVisible="{Binding IsExisting}"/>
+                                    <ctrls:ExtendedEntry
+                                        TextColor="Black"
+                        Placeholder=""
+                        Text="{Binding Plant.Surrounding, Mode=TwoWay}"
+                        HorizontalOptions="{OnIdiom
+                            Desktop='Center'
+                            Tablet='Center'
+                            Phone='FillAndExpand'}"
+                        WidthRequest="{OnIdiom
+                            Desktop='350'
+                            Tablet='320'}"
+                                        IsVisible="{Binding IsNotExisting}">
+                                    </ctrls:ExtendedEntry>
+                                </StackLayout>
+
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </controls:ParallaxControl>
+                <Grid   
+                    AutomationId="complete"
+                    HeightRequest="60"
+                    VerticalOptions="End"
+                    BackgroundColor="{StaticResource NextButtonColor}"
+                    IsVisible="{Binding IsNotExisting}">
+                    <Label 
+                        Text="Upload"
+                        Style="{StaticResource NextTextStyle}"/>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer 
+                            Command="{Binding UploadCommand}" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+                <ActivityIndicator 
+                    Color="{StaticResource AccentColor}"
+                    IsRunning="{Binding IsBusy}" 
+                    IsVisible="{Binding IsBusy}" />
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -18,5 +18,6 @@ namespace PlantHunter.Mobile.Core.Models
         public string EndangeredLevel { get; set; }
         public string Surrounding { get; set; }
         public string Description { get; set; }
+        public PlantType PlantType { get; set; }
     }
 }

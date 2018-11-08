@@ -13,7 +13,7 @@ namespace PlantHunter.Mobile.Core.Models
         public string ScientificName { get; set; }
         public string Family { get; set; }
         public string EndangeredLevel { get; set; }
-        public string Surrounding { get;  set; }
+        public string Surrounding { get; set; }
         public string Description { get; set; }
         public string PushRegistrationToken { get; set; }
     }

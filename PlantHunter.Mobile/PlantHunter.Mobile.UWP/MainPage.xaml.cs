@@ -1,22 +1,56 @@
-﻿// ---------------------------------------------------------------
-// <author>Paul Datsyuk</author>
-// <url>https://www.linkedin.com/in/pauldatsyuk/</url>
-// ---------------------------------------------------------------
-
-using System.Text;
+﻿using PlantHunter.Mobile.Core;
+using Windows.Foundation;
+using Windows.Foundation.Metadata;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 
 namespace PlantHunter.Mobile.UWP
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
+            Renderers.Calendar.Init();
+            Xamarin.FormsMaps.Init(AppSettings.BingMapsApiKey);
+            LoadApplication(new Clients.App());
+            NativeCustomize();
+        }
+
+        void NativeCustomize()
+        {
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
+
+            // PC Customization
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            {
+                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                if (titleBar != null)
+                {
+                    titleBar.BackgroundColor = (Color)App.Current.Resources["NativeAccentColor"];
+                    titleBar.ButtonBackgroundColor = (Color)App.Current.Resources["NativeAccentColor"];
+                }
+            }
+
+            // Mobile Customization
+            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+            {
+                var statusBar = StatusBar.GetForCurrentView();
+                if (statusBar != null)
+                {
+                    statusBar.BackgroundOpacity = 1;
+                    statusBar.BackgroundColor = (Color)App.Current.Resources["NativeAccentColor"];
+                }
+            }
+
+            // Launch in Window Mode
+            var currentView = ApplicationView.GetForCurrentView();
+            if (currentView.IsFullScreenMode)
+            {
+                currentView.ExitFullScreenMode();
+            }
         }
     }
 }
