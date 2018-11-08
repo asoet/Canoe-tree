@@ -11,7 +11,7 @@ namespace PlantHunter.Web.NotificationHubs
     public static class PushNotificationLogic
     {
         private static readonly Uri FireBasePushNotificationsURL = new Uri("https://fcm.googleapis.com/fcm/send");
-        private static readonly string ServerKey = "AAAAuyY-23g:APA91bG9fP7VeSFJN9dmNOvAsiTcbJ1qA1_BR4pNsFVTnbUSDWnRA7taEYK70HpK9Lhjo9Oxt0g8_BCxOQkXD6IeK3A-FBQSAG8I_uxcf2l723FfRc_qHqaiEyV6utYA_aICgOaSS47J";
+        //private static readonly string ServerKey = "";
 
         /// <summary>
         /// 
@@ -21,7 +21,7 @@ namespace PlantHunter.Web.NotificationHubs
         /// <param name="body">Description of notification</param>
         /// <param name="data">Object with all extra information you want to send hidden in the notification</param>
         /// <returns></returns>
-        public static async Task<bool> SendPushNotification(string[] deviceTokens, string title, string body, object data)
+        public static async Task<bool> SendPushNotification(string[] deviceTokens, string title, string body, object data, string firebaseKey)
         {
             bool sent = false;
 
@@ -62,7 +62,7 @@ namespace PlantHunter.Web.NotificationHubs
                 //Create request to Firebase API
                 var request = new HttpRequestMessage(HttpMethod.Post, FireBasePushNotificationsURL);
 
-                request.Headers.TryAddWithoutValidation("Authorization", "key=" + ServerKey);
+                request.Headers.TryAddWithoutValidation("Authorization", "key=" + firebaseKey);
                 request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage result;

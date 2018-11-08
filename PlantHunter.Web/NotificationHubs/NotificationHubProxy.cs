@@ -7,37 +7,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using web.Data;
+using web;
+using Microsoft.Extensions.Options;
 
 namespace PlantHunter.Web.NotificationHubs
 {
     public class NotificationHubProxy
     {
-        private NotificationHubClient _hubClient;
+        //private NotificationHubClient _hubClient;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AppSettings _settings;
 
-        public NotificationHubProxy(ApplicationDbContext applicationDbContext)
+        public NotificationHubProxy(ApplicationDbContext applicationDbContext, IOptions<AppSettings> settings)
         {
+            _settings = settings.Value;
             _applicationDbContext = applicationDbContext;
-            _hubClient = NotificationHubClient.CreateClientFromConnectionString(NotificationHubConfiguration.ConnectionString, NotificationHubConfiguration.HubName);
-        }
-
-        /// 
-        /// <summary>
-        /// Get registration ID from Azure Notification Hub
-        /// </summary>
-        public async Task<string> CreateRegistrationId()
-        {
-            return await _hubClient.CreateRegistrationIdAsync();
-        }
-
-        /// 
-        /// <summary>
-        /// Delete registration ID from Azure Notification Hub
-        /// </summary>
-        /// <param name="registrationId"></param>
-        public async Task DeleteRegistration(string registrationId)
-        {
-            await _hubClient.DeleteRegistrationAsync(registrationId);
+            //_hubClient = NotificationHubClient.CreateClientFromConnectionString(NotificationHubConfiguration.ConnectionString, NotificationHubConfiguration.HubName);
         }
 
         /// 
@@ -52,31 +37,7 @@ namespace PlantHunter.Web.NotificationHubs
         /// <returns></returns>
         public async Task<HubResponse> RegisterForPushNotifications(string id, DeviceRegistration deviceUpdate)
         {
-            RegistrationDescription registrationDescription = null;
-
-            switch (deviceUpdate.Platform)
-            {
-                case MobilePlatform.wns:
-                    registrationDescription = new WindowsRegistrationDescription(deviceUpdate.Handle);
-                    break;
-                case MobilePlatform.apns:
-                    registrationDescription = new AppleRegistrationDescription(deviceUpdate.Handle);
-                    break;
-                case MobilePlatform.gcm:
-                    registrationDescription = new GcmRegistrationDescription(deviceUpdate.Handle);
-                    break;
-                default:
-                    return new HubResponse().AddErrorMessage("Please provide correct platform notification service name.");
-            }
-
-            registrationDescription.RegistrationId = id;
-            if (deviceUpdate.Tags != null)
-                registrationDescription.Tags = new HashSet<string>(deviceUpdate.Tags);
-
-
-            try
-            {
-                await _hubClient.CreateOrUpdateRegistrationAsync(registrationDescription);
+          
                 var device = await _applicationDbContext.PushRegistrations.FirstOrDefaultAsync(f => f.DeviceId == deviceUpdate.DeviceId);
                 if(device == null)
                 {
@@ -88,11 +49,7 @@ namespace PlantHunter.Web.NotificationHubs
                 }
                 await _applicationDbContext.SaveChangesAsync();
                 return new HubResponse();
-            }
-            catch (MessagingException)
-            {
-                return new HubResponse().AddErrorMessage("Registration failed because of HttpStatusCode.Gone. PLease register once again.");
-            }
+           
         }
 
         /// 
@@ -106,7 +63,7 @@ namespace PlantHunter.Web.NotificationHubs
             string title = "Plant update";
             string body = newNotification.Content;
             var data = new { action = "Play", userId = 5 };
-            var pushSent = PushNotificationLogic.SendPushNotification(newNotification.Tags, title, body, data);
+            var pushSent = PushNotificationLogic.SendPushNotification(newNotification.Tags, title, body, data, _settings.FireBaseKey);
 
             return new HubResponse<NotificationOutcome>();
 

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using PlantHunter.Mobile.Web.Data.Models;
 using PlantHunter.Web.NotificationHubs;
 using web.Data;
+using web;
+using Microsoft.Extensions.Options;
 
 namespace PlantHunter.Web.Controllers
 {
@@ -16,11 +18,13 @@ namespace PlantHunter.Web.Controllers
     {
         private NotificationHubProxy _notificationHubProxy;
         private readonly ApplicationDbContext _context;
+        private readonly AppSettings _settings;
 
-        public PlantsController(ApplicationDbContext context)
+        public PlantsController(ApplicationDbContext context, IOptions<AppSettings> settings)
         {
+            _settings = settings.Value;
             _context = context;
-            _notificationHubProxy = new NotificationHubProxy(_context);
+            _notificationHubProxy = new NotificationHubProxy(_context, settings);
         }
 
         // GET: Plants
